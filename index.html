@@ -3,97 +3,107 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Overseer — Command</title>
+<title>Overseer</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
   :root{
-    --bg:#100f12; --panel:#1a181d; --panel2:#211e25; --line:#2c2932; --line2:#3a3742;
-    --txt:#f2f0f4; --muted:#a8a4b0; --dim:#706c79;
-    --amber:#f6b352; --green:#5fd08a; --rose:#f0788c;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    --disp:"Space Grotesk",var(--sans);
-    --mono:"Space Mono",ui-monospace,Menlo,monospace;
+    --bg:#0a0b0e; --bg2:#0e1014;
+    --card:#14161c; --card2:#191c23; --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.13);
+    --txt:#f3f5f8; --muted:#9298a4; --dim:#5a606b;
+    --ai:#52c7ff; --ai-dim:#2a6f93;
+    --go:#4ddb9a; --watch:#f5b53d; --behind:#ff6b8a;
+    --sans:'Sora',-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--sans);}
   body{min-height:100vh;}
-  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;}
-  .scroll{flex:1;overflow-y:auto;padding:0 18px 96px;}
-  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px;}
-  .wordmark{font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;}
-  .clock{font-family:var(--mono);font-size:12px;color:var(--dim);}
-  .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);}
-  .disp{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;
+    background:radial-gradient(120% 60% at 50% -8%, rgba(82,199,255,.09), transparent 60%), var(--bg);}
+  .scroll{flex:1;overflow-y:auto;padding:0 16px 100px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 8px;}
+  .wordmark{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.38em;color:var(--ai);text-transform:uppercase;}
+  .clock{font-family:var(--mono);font-size:11px;color:var(--dim);}
+  .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);}
 
-  .hero{position:relative;padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow:hidden;}
-  .hero::before{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;border-radius:50%;
-    background:radial-gradient(circle,rgba(246,179,82,.16),transparent 70%);pointer-events:none;}
-  .hero .read{font-family:var(--disp);font-weight:500;font-size:19px;line-height:1.35;letter-spacing:-.01em;max-width:90%;}
-  .hero .read .muted{color:var(--dim);}
-  .statusword{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:var(--mono);font-weight:700;
-    font-size:13px;letter-spacing:.12em;text-transform:uppercase;}
-  .briefbtn{margin-top:14px;border:1px solid var(--line2);background:transparent;color:var(--muted);
-    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border-radius:9px;cursor:pointer;}
-  .briefbtn:active{background:var(--panel);}
+  /* hero core */
+  .core{display:flex;flex-direction:column;align-items:center;padding:14px 0 8px;text-align:center;}
+  .coremeta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
+  .ringwrap{position:relative;width:188px;height:188px;}
+  .ringwrap .glow{position:absolute;inset:18px;border-radius:50%;filter:blur(26px);opacity:.5;z-index:0;}
+  .ringwrap svg{position:relative;z-index:1;}
+  .corecenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}
+  .corepct{font-size:46px;font-weight:700;line-height:1;letter-spacing:-.02em;}
+  .coreword{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;margin-top:6px;}
+  .callline{font-size:16px;font-weight:500;line-height:1.4;max-width:300px;margin:16px auto 0;color:#dfe3ea;}
+  .brief{margin-top:14px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:rgba(82,199,255,.06);
+    color:var(--ai);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+    padding:9px 16px;border-radius:999px;cursor:pointer;}
+  .brief:active{background:rgba(82,199,255,.14);}
 
-  .console{display:flex;flex-direction:column;gap:7px;}
-  .row{display:grid;grid-template-columns:auto 78px 1fr auto;align-items:center;gap:12px;
-    background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 14px;cursor:pointer;
-    text-align:left;width:100%;color:var(--txt);transition:border-color .15s,background .15s;}
-  .row:active{background:var(--panel2);}
-  .row:hover{border-color:var(--line2);}
-  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-  .dot.go{background:var(--green);} .dot.watch{background:var(--amber);} .dot.behind{background:var(--rose);}
-  .row.behind .dot{animation:pulse 1.8s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-  .rlabel{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-  .track{position:relative;height:4px;border-radius:2px;background:var(--line);overflow:visible;}
-  .fill{position:absolute;left:0;top:0;height:100%;border-radius:2px;}
-  .fill.go{background:var(--green);} .fill.watch{background:var(--amber);} .fill.behind{background:var(--rose);}
-  .pip{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--bg);}
-  .pip.go{background:var(--green);} .pip.watch{background:var(--amber);} .pip.behind{background:var(--rose);}
-  .rright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:64px;}
-  .rval{font-family:var(--disp);font-weight:700;font-size:16px;line-height:1;}
-  .rstate{font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
-  .rstate.go{color:var(--green);} .rstate.watch{color:var(--amber);} .rstate.behind{color:var(--rose);}
+  .ringprog{transition:none;}
+  .ringprog.anim{animation:draw 1.05s cubic-bezier(.4,0,.2,1) forwards;}
+  @keyframes draw{from{stroke-dashoffset:var(--circ);}to{stroke-dashoffset:var(--off);}}
+  .rg-go{stroke:var(--go);} .rg-watch{stroke:var(--watch);} .rg-behind{stroke:var(--behind);} .rg-ai{stroke:var(--ai);}
+  .glow-go{background:var(--go);} .glow-watch{background:var(--watch);} .glow-behind{background:var(--behind);} .glow-ai{background:var(--ai);}
 
+  /* area grid */
+  .gridhead{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 12px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+  .acard{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;
+    padding:15px 14px 14px;cursor:pointer;text-align:left;color:var(--txt);position:relative;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;gap:8px;transition:border-color .15s,transform .1s;}
+  .acard:active{transform:scale(.98);}
+  .acard.behind{border-color:rgba(255,107,138,.32);}
+  .acard-top{width:100%;display:flex;align-items:center;justify-content:space-between;}
+  .acard-top .alabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .mini-center{font-size:15px;font-weight:700;letter-spacing:-.01em;}
+  .astate{font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
+  .astate.go{color:var(--go);} .astate.watch{color:var(--watch);} .astate.behind{color:var(--behind);}
+  .dot{width:7px;height:7px;border-radius:50%;}
+  .dot.go{background:var(--go);} .dot.watch{background:var(--watch);} .dot.behind{background:var(--behind);}
+  .acard.behind .dot{animation:pulse 1.7s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,107,138,.5);}50%{opacity:.5;box-shadow:0 0 0 4px rgba(255,107,138,0);}}
+
+  .reviewbtn{margin-top:14px;width:100%;background:var(--card);border:1px solid var(--line);color:var(--muted);
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:13px;border-radius:14px;cursor:pointer;}
+
+  /* detail */
   .back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);
-    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:14px 0 6px;}
-  .dtitle{font-family:var(--disp);font-weight:700;font-size:28px;letter-spacing:-.02em;margin:2px 0 16px;}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;}
-  .card .lbl{margin-bottom:12px;}
-  .item{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--panel);}
-  .check{width:21px;height:21px;border:1px solid var(--line2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:var(--green);font-size:13px;}
-  .check.on{background:rgba(95,208,138,.16);border-color:var(--green);}
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:16px 0 4px;}
+  .dhead{display:flex;align-items:center;gap:13px;margin:4px 0 16px;}
+  .dhead .dtitle{font-size:27px;font-weight:700;letter-spacing:-.02em;}
+  .card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:13px;}
+  .card .lbl{margin-bottom:13px;}
+  .item{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:13px;margin-bottom:8px;background:var(--bg2);}
+  .check{width:22px;height:22px;border:1px solid var(--line2);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:var(--go);font-size:13px;}
+  .check.on{background:rgba(77,219,154,.16);border-color:var(--go);}
   .strike{color:var(--dim);text-decoration:line-through;}
-  .del{margin-left:auto;background:none;border:0;color:#46434d;cursor:pointer;font-size:15px;padding:4px;}
-  input,textarea,select{background:#0c0b0e;border:1px solid var(--line);color:var(--txt);border-radius:10px;
-    padding:11px;font-size:14px;width:100%;outline:none;font-family:var(--sans);}
-  input:focus,textarea:focus{border-color:var(--line2);}
-  input::placeholder,textarea::placeholder{color:#5a5662;}
-  input[type=range]{accent-color:var(--amber);padding:0;background:transparent;}
+  .del{margin-left:auto;background:none;border:0;color:#3c414b;cursor:pointer;font-size:16px;padding:4px;}
+  input,textarea,select{background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:11px;
+    padding:12px;font-size:14px;width:100%;outline:none;font-family:var(--sans);}
+  input:focus,textarea:focus{border-color:var(--ai-dim);}
+  input::placeholder,textarea::placeholder{color:#4d525c;}
+  input[type=range]{accent-color:var(--ai);padding:0;}
   .rowflex{display:flex;gap:9px;align-items:center;}
-  button.add{background:var(--amber);color:#100f12;border:0;border-radius:10px;font-weight:700;font-family:var(--mono);
-    font-size:13px;padding:0 16px;height:44px;cursor:pointer;flex-shrink:0;}
-  button.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt);border-radius:10px;
-    font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:11px;cursor:pointer;width:100%;text-transform:uppercase;}
-  button.solid{background:var(--amber);color:#100f12;border:0;border-radius:10px;font-weight:700;font-family:var(--mono);
-    font-size:13px;padding:13px;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:.06em;}
-  .slabel{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px;}
+  button.add{background:var(--ai);color:#04222f;border:0;border-radius:11px;font-weight:700;font-family:var(--mono);font-size:13px;padding:0 16px;height:46px;cursor:pointer;flex-shrink:0;}
+  button.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt);border-radius:11px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:12px;cursor:pointer;width:100%;text-transform:uppercase;}
+  button.solid{background:var(--ai);color:#04222f;border:0;border-radius:11px;font-weight:700;font-family:var(--mono);font-size:13px;padding:14px;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:.05em;}
+  .slabel{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px;}
   .slabel .v{font-family:var(--mono);color:var(--txt);}
-  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;
-    padding:6px 11px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;}
-  .pill.go{color:var(--green);border-color:rgba(95,208,138,.4);} .pill.watch{color:var(--amber);border-color:rgba(246,179,82,.4);}
-  .briefing{white-space:pre-wrap;line-height:1.55;font-size:14px;background:#0c0b0e;border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:12px;}
-  .empty{border:1px dashed var(--line2);border-radius:11px;padding:18px;text-align:center;color:var(--dim);font-size:13px;}
-  .statline{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:10px;line-height:1.5;}
+  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:7px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;}
+  .pill.go{color:var(--go);border-color:rgba(77,219,154,.4);} .pill.watch{color:var(--watch);border-color:rgba(245,181,61,.4);}
+  .briefing{white-space:pre-wrap;line-height:1.6;font-size:14px;background:var(--bg);border:1px solid var(--line);border-left:2px solid var(--ai);border-radius:12px;padding:16px;margin-top:12px;}
+  .empty{border:1px dashed var(--line2);border-radius:13px;padding:20px;text-align:center;color:var(--dim);font-size:13px;}
+  .statline{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:10px;line-height:1.6;}
+  .disp{font-weight:700;letter-spacing:-.02em;}
 
-  .nav{position:sticky;bottom:0;display:flex;background:rgba(16,15,18,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);}
-  .nav button{flex:1;background:none;border:0;color:var(--dim);padding:13px 0 16px;display:flex;flex-direction:column;
-    align-items:center;gap:5px;cursor:pointer;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;}
-  .nav button.on{color:var(--amber);}
-  .nav .ico{font-size:18px;line-height:1;}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
+  /* nav */
+  .nav{position:sticky;bottom:0;display:flex;background:rgba(10,11,14,.86);backdrop-filter:blur(16px);border-top:1px solid var(--line);}
+  .nav button{flex:1;background:none;border:0;color:var(--dim);padding:13px 0 17px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;}
+  .nav button.on{color:var(--ai);}
+  .nav .ico{font-size:17px;line-height:1;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;}.ringprog.anim{stroke-dashoffset:var(--off)!important;}}
 </style>
 </head>
 <body>
@@ -105,9 +115,8 @@
 <script>
 const $ = s => document.querySelector(s);
 const today = () => new Date().toISOString().slice(0,10);
-const now = () => new Date();
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let view = "home";
+let view="home";
 
 function fresh(){ return {
   day: today(),
@@ -126,255 +135,167 @@ function fresh(){ return {
 };}
 function load(){
   try{
-    const s = JSON.parse(localStorage.getItem("overseer-v2")||"null");
+    const s=JSON.parse(localStorage.getItem("overseer-v3")||"null");
     if(s){
       if(s.day!==today()){
-        s.body.trained=false; s.body.fuel=false; s.body.water=0;
-        s.focus.sessions=0; s.focus.oneThing=""; s.focus.distractions=0;
-        s.mind.windDown=false; s.mind.reflection="";
-        if(s.care.day!==today()){ s.care.am.forEach(x=>x.d=false); s.care.pm.forEach(x=>x.d=false); s.care.day=today(); }
+        s.body.trained=false;s.body.fuel=false;s.body.water=0;
+        s.focus.sessions=0;s.focus.oneThing="";s.focus.distractions=0;
+        s.mind.windDown=false;s.mind.reflection="";
+        if(s.care.day!==today()){s.care.am.forEach(x=>x.d=false);s.care.pm.forEach(x=>x.d=false);s.care.day=today();}
         s.day=today();
       }
-      const f=fresh(); return {...f,...s, body:{...f.body,...s.body}, focus:{...f.focus,...s.focus},
-        mind:{...f.mind,...s.mind}, money:{...f.money,...s.money}, care:{...f.care,...s.care}};
+      const f=fresh();return {...f,...s,body:{...f.body,...s.body},focus:{...f.focus,...s.focus},mind:{...f.mind,...s.mind},money:{...f.money,...s.money},care:{...f.care,...s.care}};
     }
   }catch(e){}
   return fresh();
 }
-let S = load();
-function save(){ localStorage.setItem("overseer-v2", JSON.stringify(S)); }
+let S=load();
+function save(){ localStorage.setItem("overseer-v3", JSON.stringify(S)); }
 
-function streak(dates){
-  const set=new Set(dates||[]); let n=0; let d=new Date();
-  const f=x=>x.toISOString().slice(0,10);
-  if(!set.has(f(d))) d.setDate(d.getDate()-1);
-  while(set.has(f(d))){ n++; d.setDate(d.getDate()-1); }
-  return n;
-}
-function daysUntil(due){ if(!due) return 99; return Math.ceil((new Date(due+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000); }
-function daysAgo(date){ return Math.abs(Math.ceil((new Date(today()+"T00:00:00")-new Date((date||today())+"T00:00:00"))/86400000)); }
+function streak(dates){const set=new Set(dates||[]);let n=0,d=new Date();const f=x=>x.toISOString().slice(0,10);if(!set.has(f(d)))d.setDate(d.getDate()-1);while(set.has(f(d))){n++;d.setDate(d.getDate()-1);}return n;}
+function daysUntil(due){if(!due)return 99;return Math.ceil((new Date(due+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000);}
+function daysAgo(date){return Math.abs(Math.ceil((new Date(today()+"T00:00:00")-new Date((date||today())+"T00:00:00"))/86400000));}
 
-const AREAS = [
-  {key:"body", label:"Body", status(){
-    const sl=parseFloat(S.body.sleep)||0;
-    let cls = sl>=7.5 ? "go" : sl>=6 ? "watch" : "behind";
-    return {cls, word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[cls], val: S.body.hrv? S.body.hrv : sl+"h", fill: Math.min(sl/9,1)};
-  }},
-  {key:"focus", label:"Focus", status(){
-    const s=S.focus.sessions, g=S.focus.goal;
-    let cls = s>=g?"go":s>=1?"watch":"behind";
-    return {cls, word:{go:"DIALED",watch:"WARMING",behind:"IDLE"}[cls], val:s+"/"+g, fill:Math.min(s/g,1)};
-  }},
-  {key:"mind", label:"Mind", status(){
-    const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);
-    let cls = n>=2?"go":n===1?"watch":"behind";
-    return {cls, word:{go:"CLEAR",watch:"OK",behind:"UNSET"}[cls], val:S.mind.mood+"/5", fill:S.mind.mood/5};
-  }},
-  {key:"create", label:"Create", status(){
-    const active=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;
-    const posted=S.create.filter(c=>c.stage==="Posted").length;
-    let cls = active>0?"go":S.create.length>0?"watch":"behind";
-    return {cls, word:{go:"SHIPPING",watch:"IN MOTION",behind:"STALLED"}[cls], val:S.create.length+"", fill: S.create.length? (posted+active)/S.create.length : 0};
-  }},
-  {key:"capture", label:"Inbox", status(){
-    const n=S.capture.length;
-    let cls = n===0?"go":n<=4?"watch":"behind";
-    return {cls, word:{go:"CLEAR",watch:"TO SORT",behind:"PILING UP"}[cls], val:n+"", fill: n? Math.min(n/8,1):0};
-  }},
-  {key:"school", label:"School", status(){
-    const open=S.school.filter(x=>!x.done);
-    const over=open.filter(x=>daysUntil(x.due)<0).length;
-    const soon=open.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;
-    let cls = over>0?"behind":soon>0?"watch":"go";
-    return {cls, word:{go:"ON TOP",watch:"DUE SOON",behind:"OVERDUE"}[cls], val:open.length+"", fill: open.length?Math.min(open.length/6,1):0};
-  }},
-  {key:"work", label:"Work", status(){
-    const open=S.work.filter(x=>!x.done);
-    const over=open.filter(x=>daysUntil(x.due)<0).length;
-    let cls = over>0?"behind":open.length?"watch":"go";
-    return {cls, word:{go:"ON TRACK",watch:"ACTIVE",behind:"OVERDUE"}[cls], val:open.length+"", fill: open.length?Math.min(open.length/6,1):0};
-  }},
-  {key:"care", label:"Care", status(){
-    const am=S.care.am.every(x=>x.d), pm=S.care.pm.every(x=>x.d);
-    let cls = (am&&pm)?"go":(am||pm)?"watch":"behind";
-    return {cls, word:{go:"KEPT",watch:"HALF",behind:"SKIPPED"}[cls], val:streak(S.care.dates)+"d", fill:(S.care.am.filter(x=>x.d).length+S.care.pm.filter(x=>x.d).length)/(S.care.am.length+S.care.pm.length)};
-  }},
-  {key:"money", label:"Money", status(){
-    const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);
-    return {cls:"go", word:"STEADY", val:"$"+m.toFixed(0), fill:0.5};
-  }},
-  {key:"wins", label:"Wins", status(){
-    const wk=S.wins.filter(w=>daysAgo(w.date)<=7).length;
-    let cls = wk>0?"go":"behind";
-    return {cls, word:{go:"LOGGED",behind:"NONE YET"}[cls], val:wk+"", fill:Math.min(wk/5,1)};
-  }},
+const AREAS=[
+  {key:"body",label:"Body",status(){const sl=parseFloat(S.body.sleep)||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c,word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[c],val:S.body.hrv?S.body.hrv:sl+"h",fill:Math.min(sl/9,1)};}},
+  {key:"focus",label:"Focus",status(){const s=S.focus.sessions,g=S.focus.goal;let c=s>=g?"go":s>=1?"watch":"behind";return{cls:c,word:{go:"DIALED",watch:"WARMING",behind:"IDLE"}[c],val:s+"/"+g,fill:Math.min(s/g,1)};}},
+  {key:"mind",label:"Mind",status(){const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);let c=n>=2?"go":n===1?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"OK",behind:"UNSET"}[c],val:S.mind.mood+"/5",fill:S.mind.mood/5};}},
+  {key:"create",label:"Create",status(){const a=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;const p=S.create.filter(c=>c.stage==="Posted").length;let c=a>0?"go":S.create.length>0?"watch":"behind";return{cls:c,word:{go:"SHIPPING",watch:"IN MOTION",behind:"STALLED"}[c],val:S.create.length+"",fill:S.create.length?(p+a)/S.create.length:0};}},
+  {key:"capture",label:"Inbox",status(){const n=S.capture.length;let c=n===0?"go":n<=4?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"TO SORT",behind:"PILING UP"}[c],val:n+"",fill:n?Math.min(n/8,1):0};}},
+  {key:"school",label:"School",status(){const o=S.school.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;const so=o.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;let c=ov>0?"behind":so>0?"watch":"go";return{cls:c,word:{go:"ON TOP",watch:"DUE SOON",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
+  {key:"work",label:"Work",status(){const o=S.work.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;let c=ov>0?"behind":o.length?"watch":"go";return{cls:c,word:{go:"ON TRACK",watch:"ACTIVE",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
+  {key:"care",label:"Care",status(){const am=S.care.am.every(x=>x.d),pm=S.care.pm.every(x=>x.d);let c=(am&&pm)?"go":(am||pm)?"watch":"behind";return{cls:c,word:{go:"KEPT",watch:"HALF",behind:"SKIPPED"}[c],val:streak(S.care.dates)+"d",fill:(S.care.am.filter(x=>x.d).length+S.care.pm.filter(x=>x.d).length)/(S.care.am.length+S.care.pm.length)};}},
+  {key:"money",label:"Money",status(){const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return{cls:"go",word:"STEADY",val:"$"+m.toFixed(0),fill:.6};}},
+  {key:"wins",label:"Wins",status(){const wk=S.wins.filter(w=>daysAgo(w.date)<=7).length;let c=wk>0?"go":"behind";return{cls:c,word:{go:"LOGGED",behind:"NONE YET"}[c],val:wk+"",fill:Math.min(wk/5,1)};}},
 ];
 
-function overallWord(){
-  const s = AREAS.map(a=>a.status().cls);
-  if(s.includes("behind")) return {cls:"behind", word:"NEEDS ATTENTION"};
-  if(s.filter(x=>x==="watch").length>=2) return {cls:"watch", word:"STEADY"};
-  return {cls:"go", word:"DIALED IN"};
+function ring(pct,cls,size,sw,centerHtml,anim){
+  const r=(size-sw)/2, cx=size/2, circ=2*Math.PI*r, off=circ*(1-Math.max(0,Math.min(1,pct)));
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="${sw}"/>
+    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke-width="${sw}" stroke-linecap="round"
+      class="ringprog rg-${cls} ${anim?'anim':''}" style="--circ:${circ};--off:${off};stroke-dasharray:${circ};stroke-dashoffset:${anim?circ:off};"
+      transform="rotate(-90 ${cx} ${cx})"/>
+  </svg>${centerHtml?`<div class="corecenter">${centerHtml}</div>`:""}`;
 }
+
+function overall(){
+  const sc={go:1,watch:.5,behind:0};
+  const arr=AREAS.map(a=>sc[a.status().cls]);
+  const pct=arr.reduce((x,y)=>x+y,0)/arr.length;
+  const cl=AREAS.map(a=>a.status().cls);
+  let cls=cl.includes("behind")?"behind":cl.filter(x=>x==="watch").length>=2?"watch":"go";
+  let word=cls==="behind"?"NEEDS YOU":cls==="watch"?"STEADY":"DIALED IN";
+  return {pct,cls,word};
+}
+
 function renderHome(){
-  const ov = overallWord();
-  const call = S.call || "Tap Brief me and I'll read your day.";
-  let rows = AREAS.map(a=>{
-    const st=a.status(); const pct=Math.round(st.fill*100);
-    return `<button class="row ${st.cls}" onclick="go('${a.key}')">
-      <span class="dot ${st.cls}"></span>
-      <span class="rlabel">${a.label}</span>
-      <span class="track"><span class="fill ${st.cls}" style="width:${pct}%"></span><span class="pip ${st.cls}" style="left:${pct}%"></span></span>
-      <span class="rright"><span class="rval">${esc(st.val)}</span><span class="rstate ${st.cls}">${st.word}</span></span>
+  const ov=overall();
+  const call=S.call||"Tap brief me — I'll read your whole system and call the day.";
+  const cards=AREAS.map(a=>{
+    const st=a.status();
+    const center=`<div class="mini-center">${esc(st.val)}</div>`;
+    return `<button class="acard ${st.cls}" onclick="go('${a.key}')">
+      <div class="acard-top"><span class="alabel">${a.label}</span><span class="dot ${st.cls}"></span></div>
+      <div class="ringwrap" style="width:62px;height:62px;">${ring(st.fill,st.cls,62,5,center,false)}</div>
+      <div class="astate ${st.cls}">${st.word}</div>
     </button>`;
   }).join("");
   return `
-    <div class="hero">
-      <div class="lbl">Today's read</div>
-      <div class="read" style="margin-top:10px;">${esc(call)}</div>
-      <div class="statusword"><span class="dot ${ov.cls}"></span><span class="rstate ${ov.cls}" style="font-size:13px;">${ov.word}</span></div>
-      <button class="briefbtn" id="hbrief" onclick="brief()">↻ Brief me</button>
+    <div class="core">
+      <div class="coremeta">System status · ${new Date().toLocaleDateString('en-US',{weekday:'long'})}</div>
+      <div class="ringwrap">
+        <div class="glow glow-${ov.cls}"></div>
+        ${ring(ov.pct,ov.cls,188,9,`<div class="corepct">${Math.round(ov.pct*100)}</div><div class="coreword astate ${ov.cls}">${ov.word}</div>`,true)}
+      </div>
+      <div class="callline">${esc(call)}</div>
+      <button class="brief" id="hbrief" onclick="brief()">◈ Brief me</button>
     </div>
-    <div class="lbl" style="margin:4px 0 10px;">Where you stand</div>
-    <div class="console">${rows}</div>
-    <div style="margin-top:16px;"><button class="ghost" onclick="go('review')">↗ Weekly deep review</button></div>
+    <div class="gridhead"><span class="lbl">Where you stand</span><span class="lbl">${AREAS.length} systems</span></div>
+    <div class="grid">${cards}</div>
+    <button class="reviewbtn" onclick="go('review')">↗ Run weekly deep review</button>
   `;
 }
 
-function persist(){ save(); render(); }
-function addTo(list, obj){ S[list].push(obj); persist(); }
-function rm(list, i){ S[list].splice(i,1); persist(); }
-function header(title){ return `<button class="back" onclick="go('home')">← Command</button><div class="dtitle">${title}</div>`; }
+function persist(){save();render();}
+function addTo(list,obj){S[list].push(obj);persist();}
+function rm(list,i){S[list].splice(i,1);persist();}
+function dhead(title,cls){const m={body:"Body",focus:"Focus",mind:"Mind",create:"Create",capture:"Inbox",school:"School",work:"Work",money:"Money",care:"Care",wins:"Wins",overseer:"Overseer",review:"Weekly review"};return `<button class="back" onclick="go('home')">← Command</button><div class="dhead"><div class="dtitle">${title}</div></div>`;}
 
 function detail(key){
-  const map={body:bodyView,focus:focusView,mind:mindView,create:createView,capture:captureView,
-    school:schoolView,work:workView,money:moneyView,care:careView,wins:winsView,overseer:overseerView,review:reviewView};
-  return (map[key]||(()=>header("—")+`<div class="empty">Coming soon.</div>`))();
+  const map={body:bodyView,focus:focusView,mind:mindView,create:createView,capture:captureView,school:schoolView,work:workView,money:moneyView,care:careView,wins:winsView,overseer:overseerView,review:reviewView};
+  return (map[key]||(()=>dhead("—")+`<div class="empty">Coming soon.</div>`))();
 }
 
-function bodyView(){ const b=S.body; return header("Body")+`
-  <div class="card">
-    <div class="lbl">Recovery · today</div>
+function bodyView(){const b=S.body;return dhead("Body")+`
+  <div class="card"><div class="lbl">Recovery · today</div>
     <div class="slabel"><span>Sleep</span><span class="v" id="slv">${b.sleep} h</span></div>
     <input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">
     <div class="slabel" style="margin-top:14px;"><span>HRV (ms)</span></div>
     <input value="${esc(b.hrv)}" inputmode="numeric" placeholder="from Athlytic / your watch" oninput="S.body.hrv=this.value;save();">
     <div class="slabel" style="margin-top:14px;"><span>Resting HR (bpm)</span></div>
     <input value="${esc(b.rhr)}" inputmode="numeric" placeholder="from your watch" oninput="S.body.rhr=this.value;save();">
-    <div class="statline">Auto-feed from Apple Health is the next build — these go automatic.</div>
+    <div class="statline">Apple Health auto-feed is the next wiring step — these fill in on their own.</div>
   </div>
-  <div class="card">
-    <div class="lbl">Done today</div>
+  <div class="card"><div class="lbl">Done today</div>
     <div class="item"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained (logged in Hevy)</span></div>
     <div class="item"><div class="check ${b.fuel?'on':''}" onclick="S.body.fuel=!S.body.fuel;persist();">${b.fuel?'✓':''}</div><span class="${b.fuel?'strike':''}">Ate enough to recover</span></div>
     <div class="slabel" style="margin-top:6px;"><span>Water</span><span class="v">${b.water} cups</span></div>
     <div class="rowflex"><button class="ghost" onclick="S.body.water=Math.max(0,S.body.water-1);persist();">−</button><button class="ghost" onclick="S.body.water++;persist();">+ cup</button></div>
-  </div>`;
-}
-function focusView(){ const f=S.focus; return header("Focus")+`
-  <div class="card">
-    <div class="lbl">The one thing today</div>
-    <input value="${esc(f.oneThing)}" placeholder="If only one thing gets done…" oninput="S.focus.oneThing=this.value;save();">
-  </div>
-  <div class="card">
-    <div class="lbl">Deep work sessions</div>
-    <div style="display:flex;align-items:baseline;gap:8px;"><span class="disp" style="font-size:40px;">${f.sessions}</span><span class="lbl">/ ${f.goal} today</span></div>
+  </div>`;}
+
+function focusView(){const f=S.focus;return dhead("Focus")+`
+  <div class="card"><div class="lbl">The one thing today</div>
+    <input value="${esc(f.oneThing)}" placeholder="If only one thing gets done…" oninput="S.focus.oneThing=this.value;save();"></div>
+  <div class="card"><div class="lbl">Deep work sessions</div>
+    <div style="display:flex;align-items:baseline;gap:8px;"><span class="disp" style="font-size:42px;">${f.sessions}</span><span class="lbl">/ ${f.goal} today</span></div>
     <div class="rowflex" style="margin-top:12px;"><button class="ghost" onclick="S.focus.sessions=Math.max(0,S.focus.sessions-1);persist();">−</button><button class="solid" onclick="S.focus.sessions++;persist();">+ logged a session</button></div>
     <div class="slabel" style="margin-top:16px;"><span>Distractions caught</span><span class="v">${f.distractions}</span></div>
-    <button class="ghost" onclick="S.focus.distractions++;persist();">+ I caught myself drifting</button>
-    <div class="statline">Honesty here is the point — the Overseer reads it.</div>
-  </div>`;
-}
-function mindView(){ const m=S.mind; return header("Mind")+`
-  <div class="card">
-    <div class="lbl">Wind-down</div>
-    <div class="item"><div class="check ${m.windDown?'on':''}" onclick="S.mind.windDown=!S.mind.windDown;persist();">${m.windDown?'✓':''}</div><span class="${m.windDown?'strike':''}">Screens down, lights low, ready to sleep</span></div>
+    <button class="ghost" onclick="S.focus.distractions++;persist();">+ caught myself drifting</button></div>`;}
+
+function mindView(){const m=S.mind;return dhead("Mind")+`
+  <div class="card"><div class="lbl">Wind-down</div>
+    <div class="item"><div class="check ${m.windDown?'on':''}" onclick="S.mind.windDown=!S.mind.windDown;persist();">${m.windDown?'✓':''}</div><span class="${m.windDown?'strike':''}">Screens down, ready to sleep</span></div>
     <div class="slabel" style="margin-top:8px;"><span>Mood / energy</span><span class="v">${m.mood}/5</span></div>
-    <input type="range" min="1" max="5" step="1" value="${m.mood}" oninput="S.mind.mood=+this.value;save();render();">
-  </div>
-  <div class="card">
-    <div class="lbl">One line on today</div>
-    <textarea rows="3" placeholder="What's on your mind? One honest sentence." oninput="S.mind.reflection=this.value;save();">${esc(m.reflection)}</textarea>
-  </div>`;
-}
+    <input type="range" min="1" max="5" step="1" value="${m.mood}" oninput="S.mind.mood=+this.value;save();render();"></div>
+  <div class="card"><div class="lbl">One line on today</div>
+    <textarea rows="3" placeholder="One honest sentence." oninput="S.mind.reflection=this.value;save();">${esc(m.reflection)}</textarea></div>`;}
+
 const STAGES=["Idea","Scripting","Recording","Editing","Posted"];
-function createView(){ return header("Create")+`
-  <div class="card">
-    <div class="lbl">Loose Ends + vlog pipeline</div>
-    ${S.create.length?S.create.map((c,i)=>{
-      const cls = c.stage==="Posted"?"go":(c.stage==="Editing"||c.stage==="Recording")?"watch":"";
-      return `<div class="item"><span style="flex:1">${esc(c.t)}</span>
-        <span class="pill ${cls}" onclick="S.create[${i}].stage=STAGES[(STAGES.indexOf(S.create[${i}].stage)+1)%5];persist();">${c.stage} →</span>
-        <button class="del" onclick="rm('create',${i})">✕</button></div>`;
-    }).join(""):`<div class="empty">No projects yet. Add one below.</div>`}
-    <div class="rowflex" style="margin-top:10px;"><input id="ci" placeholder="New episode or video…"><button class="add" onclick="if($('#ci').value.trim()){addTo('create',{t:$('#ci').value.trim(),stage:'Idea'});}">Add</button></div>
-  </div>`;
-}
-function captureView(){ return header("Inbox")+`
-  <div class="card">
-    <div class="lbl">Everything lands here first</div>
-    <div class="rowflex" style="margin-bottom:12px;"><input id="capi" placeholder="Dump any idea, task, or spark…" onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('capture',{t:this.value.trim()});}"><button class="add" onclick="if($('#capi').value.trim()){addTo('capture',{t:$('#capi').value.trim()});}">Add</button></div>
+function createView(){return dhead("Create")+`
+  <div class="card"><div class="lbl">Loose Ends + vlog pipeline</div>
+    ${S.create.length?S.create.map((c,i)=>{const cl=c.stage==="Posted"?"go":(c.stage==="Editing"||c.stage==="Recording")?"watch":"";return `<div class="item"><span style="flex:1">${esc(c.t)}</span><span class="pill ${cl}" onclick="S.create[${i}].stage=STAGES[(STAGES.indexOf(S.create[${i}].stage)+1)%5];persist();">${c.stage} →</span><button class="del" onclick="rm('create',${i})">✕</button></div>`;}).join(""):`<div class="empty">No projects yet.</div>`}
+    <div class="rowflex" style="margin-top:10px;"><input id="ci" placeholder="New episode or video…"><button class="add" onclick="if($('#ci').value.trim()){addTo('create',{t:$('#ci').value.trim(),stage:'Idea'});}">Add</button></div></div>`;}
+
+function captureView(){return dhead("Inbox")+`
+  <div class="card"><div class="lbl">Everything lands here first</div>
+    <div class="rowflex" style="margin-bottom:12px;"><input id="capi" placeholder="Dump any idea or task…" onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('capture',{t:this.value.trim()});}"><button class="add" onclick="if($('#capi').value.trim()){addTo('capture',{t:$('#capi').value.trim()});}">Add</button></div>
     ${S.capture.length?S.capture.map((c,i)=>`<div class="item"><span style="flex:1">${esc(c.t)}</span><button class="del" onclick="rm('capture',${i})">✕</button></div>`).join(""):`<div class="empty">Clear. Nothing waiting to be sorted.</div>`}
-    <div class="statline">Sort it later. The point is you never lose it.</div>
-  </div>`;
-}
-function listView(title, listKey, withDue, note){
-  const items=S[listKey];
-  return header(title)+`
-  <div class="card">
-    <div class="lbl">${withDue?"Assignments & tests":"Next actions"}</div>
-    ${items.length?items.map((x,i)=>{
-      const du=withDue?daysUntil(x.due):99;
-      const dcls = x.done?"":du<0?"behind":du<=2?"watch":"go";
-      const dtxt = withDue&&x.due ? (x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")) : "";
-      return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S['${listKey}'][${i}].done=!S['${listKey}'][${i}].done;persist();">${x.done?'✓':''}</div>
-        <span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>
-        ${dtxt?`<span class="rstate ${dcls}" style="font-size:10px;">${dtxt}</span>`:""}
-        <button class="del" onclick="rm('${listKey}',${i})">✕</button></div>`;
-    }).join(""):`<div class="empty">Nothing here yet.</div>`}
-    <div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add…">${withDue?`<input id="ld" type="date" style="max-width:150px;">`:""}<button class="add" onclick="if($('#li').value.trim()){addTo('${listKey}',{t:$('#li').value.trim(),due:${withDue?"$('#ld').value":"''"},done:false});}">Add</button></div>
-  </div>${note?`<div class="card"><div class="statline">${note}</div></div>`:""}`;
-}
-function schoolView(){ return listView("School","school",true,"Canvas auto-import is the next build — your assignments will fill in on their own."); }
-function workView(){ return listView("Work","work",true,""); }
-function moneyView(){ const subs=S.money.subs; const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);
-  return header("Money")+`
-  <div class="card">
-    <div class="lbl">Monthly burn</div>
-    <div class="disp" style="font-size:36px;">$${m.toFixed(2)}<span class="lbl"> /mo</span></div>
-    <div class="statline">≈ $${(m*12).toFixed(0)} / year</div>
-  </div>
-  <div class="card">
-    <div class="lbl">Subscriptions</div>
-    ${subs.map((s,i)=>`<div class="item"><span style="flex:1">${esc(s.name)}</span><span class="v" style="font-family:var(--mono)">$${(Number(s.cost)||0).toFixed(2)}</span>
-      <span class="pill" onclick="S.money.subs[${i}].cycle=S.money.subs[${i}].cycle==='mo'?'yr':'mo';persist();">${s.cycle}</span>
-      <button class="del" onclick="S.money.subs.splice(${i},1);persist();">✕</button></div>`).join("")}
-    <div class="rowflex" style="margin-top:10px;"><input id="mn" placeholder="Service"><input id="mc" type="number" inputmode="decimal" placeholder="$" style="max-width:90px;"><button class="add" onclick="if($('#mn').value.trim()){S.money.subs.push({name:$('#mn').value.trim(),cost:Number($('#mc').value)||0,cycle:'mo'});persist();}">Add</button></div>
-  </div>`;
-}
-function careView(){ const c=S.care;
-  const grp=(title,arr,key)=>`<div class="card"><div class="lbl">${title}</div>${arr.map((x,i)=>`<div class="item"><div class="check ${x.d?'on':''}" onclick="toggleCare('${key}',${i})">${x.d?'✓':''}</div><span class="${x.d?'strike':''}">${esc(x.l)}</span></div>`).join("")}</div>`;
-  return header("Care")+`
-  <div class="card" style="display:flex;align-items:center;gap:14px;">
-    <span class="disp" style="font-size:32px;color:var(--amber);">${streak(c.dates)}</span>
-    <div><div class="lbl">day streak</div><div style="font-size:13px;color:var(--muted);margin-top:2px;">full AM + PM</div></div>
-  </div>
-  ${grp("Morning",c.am,"am")}${grp("Night",c.pm,"pm")}`;
-}
-function toggleCare(g,i){ S.care[g][i].d=!S.care[g][i].d;
-  const full=S.care.am.every(x=>x.d)&&S.care.pm.every(x=>x.d);
-  S.care.dates=(S.care.dates||[]).filter(d=>d!==today());
-  if(full) S.care.dates.push(today());
-  persist();
-}
-function winsView(){ return header("Wins")+`
-  <div class="card">
-    <div class="lbl">What you actually shipped</div>
+    <div class="statline">Sort it later. The point is you never lose it.</div></div>`;}
+
+function listView(title,listKey,withDue,note){const items=S[listKey];return dhead(title)+`
+  <div class="card"><div class="lbl">${withDue?"Assignments & tests":"Next actions"}</div>
+    ${items.length?items.map((x,i)=>{const du=withDue?daysUntil(x.due):99;const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=withDue&&x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S['${listKey}'][${i}].done=!S['${listKey}'][${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('${listKey}',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing here yet.</div>`}
+    <div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add…">${withDue?`<input id="ld" type="date" style="max-width:148px;">`:""}<button class="add" onclick="if($('#li').value.trim()){addTo('${listKey}',{t:$('#li').value.trim(),due:${withDue?"$('#ld').value":"''"},done:false});}">Add</button></div></div>
+  ${note?`<div class="card"><div class="statline">${note}</div></div>`:""}`;}
+function schoolView(){return listView("School","school",true,"Canvas auto-import is the next wiring step — your assignments will fill in on their own.");}
+function workView(){return listView("Work","work",true,"");}
+
+function moneyView(){const subs=S.money.subs;const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return dhead("Money")+`
+  <div class="card"><div class="lbl">Monthly burn</div><div class="disp" style="font-size:38px;">$${m.toFixed(2)}<span class="lbl"> /mo</span></div><div class="statline">≈ $${(m*12).toFixed(0)} / year</div></div>
+  <div class="card"><div class="lbl">Subscriptions</div>
+    ${subs.map((s,i)=>`<div class="item"><span style="flex:1">${esc(s.name)}</span><span class="v" style="font-family:var(--mono)">$${(Number(s.cost)||0).toFixed(2)}</span><span class="pill" onclick="S.money.subs[${i}].cycle=S.money.subs[${i}].cycle==='mo'?'yr':'mo';persist();">${s.cycle}</span><button class="del" onclick="S.money.subs.splice(${i},1);persist();">✕</button></div>`).join("")}
+    <div class="rowflex" style="margin-top:10px;"><input id="mn" placeholder="Service"><input id="mc" type="number" inputmode="decimal" placeholder="$" style="max-width:88px;"><button class="add" onclick="if($('#mn').value.trim()){S.money.subs.push({name:$('#mn').value.trim(),cost:Number($('#mc').value)||0,cycle:'mo'});persist();}">Add</button></div></div>`;}
+
+function careView(){const c=S.care;const grp=(t,arr,k)=>`<div class="card"><div class="lbl">${t}</div>${arr.map((x,i)=>`<div class="item"><div class="check ${x.d?'on':''}" onclick="toggleCare('${k}',${i})">${x.d?'✓':''}</div><span class="${x.d?'strike':''}">${esc(x.l)}</span></div>`).join("")}</div>`;
+  return dhead("Care")+`<div class="card" style="display:flex;align-items:center;gap:14px;"><span class="disp" style="font-size:34px;color:var(--ai);">${streak(c.dates)}</span><div><div class="lbl">day streak</div><div style="font-size:13px;color:var(--muted);margin-top:2px;">full AM + PM</div></div></div>${grp("Morning",c.am,"am")}${grp("Night",c.pm,"pm")}`;}
+function toggleCare(g,i){S.care[g][i].d=!S.care[g][i].d;const full=S.care.am.every(x=>x.d)&&S.care.pm.every(x=>x.d);S.care.dates=(S.care.dates||[]).filter(d=>d!==today());if(full)S.care.dates.push(today());persist();}
+
+function winsView(){return dhead("Wins")+`
+  <div class="card"><div class="lbl">What you actually shipped</div>
     <div class="rowflex" style="margin-bottom:12px;"><input id="wi" placeholder="Something you finished…" onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('wins',{t:this.value.trim(),date:today()});}"><button class="add" onclick="if($('#wi').value.trim()){addTo('wins',{t:$('#wi').value.trim(),date:today()});}">Log</button></div>
     ${S.wins.length?S.wins.slice().reverse().map(w=>`<div class="item"><span style="flex:1">${esc(w.t)}</span><span class="lbl">${w.date.slice(5)}</span></div>`).join(""):`<div class="empty">Empty for now. Log the first thing you finish today.</div>`}
-    <div class="statline">Proof, for the days it feels like nothing's getting done.</div>
-  </div>`;
-}
+    <div class="statline">Proof, for the days it feels like nothing got done.</div></div>`;}
 
 function snapshot(){
   const a=AREAS.map(x=>{const s=x.status();return `${x.label}: ${s.word} (${s.val})`;}).join("; ");
@@ -383,56 +304,33 @@ function snapshot(){
 Body: ${S.body.sleep}h sleep, HRV ${S.body.hrv||'?'}, RHR ${S.body.rhr||'?'}, trained ${S.body.trained}.
 Focus: ${S.focus.sessions}/${S.focus.goal} sessions, one thing: "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.
 Open school: ${sch}.
-Inbox to sort: ${S.capture.length}. Care streak: ${streak(S.care.dates)}d. Wins this week: ${AREAS.find(x=>x.key==='wins').status().val}.`;
+Inbox to sort: ${S.capture.length}. Care streak: ${streak(S.care.dates)}d.`;
 }
-async function callApi(message){
-  const r=await fetch("/api/overseer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message})});
-  const d=await r.json(); if(d.error) throw new Error(d.error); return d.text;
-}
-async function brief(){
-  const btn=$("#hbrief"); if(btn){btn.disabled=true;btn.textContent="reading…";}
-  try{
-    const t=await callApi(snapshot()+"\n\nGive me my read of the day: the call, then 2 specific moves. Tight.");
-    S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,120); S.briefing=t; save(); render();
-  }catch(e){ S.call="Couldn't reach the Overseer ("+e.message+")"; render(); }
-}
-function overseerView(){ return header("Overseer")+`
-  <div class="card">
-    <div class="lbl">It reads everything above</div>
+async function callApi(message){const r=await fetch("/api/overseer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message})});const d=await r.json();if(d.error)throw new Error(d.error);return d.text;}
+async function brief(){const b=$("#hbrief");if(b){b.textContent="reading…";}try{const t=await callApi(snapshot()+"\n\nGive me my read of the day: the call, then 2 specific moves. Tight.");S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,140);S.briefing=t;save();render();}catch(e){S.call="Couldn't reach the Overseer ("+e.message+")";render();}}
+
+function overseerView(){return dhead("Overseer")+`
+  <div class="core" style="padding:6px 0 4px;"><div class="ringwrap" style="width:120px;height:120px;"><div class="glow glow-ai"></div>${ring(1,"ai",120,7,`<div style="font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ai);">CORE</div>`,true)}</div></div>
+  <div class="card"><div class="lbl">It reads every system</div>
     ${S.briefing?`<div class="briefing">${esc(S.briefing)}</div>`:`<div class="empty">No briefing yet. Hit the button.</div>`}
     <button class="solid" style="margin-top:12px;" id="ovb" onclick="brief2()">Read my whole day</button>
-    <div class="rowflex" style="margin-top:10px;"><input id="ovm" placeholder="Ask the Overseer anything…" onkeydown="if(event.key==='Enter')ask()"><button class="add" onclick="ask()">Send</button></div>
-  </div>`;
-}
-async function brief2(){ const b=$("#ovb"); if(b){b.disabled=true;b.textContent="Reading…";}
-  try{ const t=await callApi(snapshot()+"\n\nFull read: where I stand, what I'm drifting on, the one move now.");
-    S.briefing=t; S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,120); save(); render(); }
-  catch(e){ S.briefing="Error: "+e.message; render(); } }
-async function ask(){ const el=$("#ovm"); const m=el?el.value.trim():""; if(!m)return;
-  try{ const t=await callApi("My current standing:\n"+snapshot()+"\n\nNoah asks: "+m); S.briefing=t; save(); render(); }
-  catch(e){ S.briefing="Error: "+e.message; render(); } }
-function reviewView(){ return header("Weekly review")+`
-  <div class="card">
-    <div class="lbl">The deep look</div>
-    <p style="font-size:13px;color:var(--muted);line-height:1.5;">Once a week, the Overseer steps back and reads the whole picture — patterns across body, focus, school, and creative — and tells you what to change.</p>
+    <div class="rowflex" style="margin-top:10px;"><input id="ovm" placeholder="Ask the Overseer anything…" onkeydown="if(event.key==='Enter')ask()"><button class="add" onclick="ask()">Send</button></div></div>`;}
+async function brief2(){const b=$("#ovb");if(b){b.disabled=true;b.textContent="Reading…";}try{const t=await callApi(snapshot()+"\n\nFull read: where I stand, what I'm drifting on, the one move now.");S.briefing=t;S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,140);save();render();}catch(e){S.briefing="Error: "+e.message;render();}}
+async function ask(){const el=$("#ovm");const m=el?el.value.trim():"";if(!m)return;try{const t=await callApi("My standing:\n"+snapshot()+"\n\nNoah asks: "+m);S.briefing=t;save();render();}catch(e){S.briefing="Error: "+e.message;render();}}
+
+function reviewView(){return dhead("Weekly review")+`
+  <div class="card"><div class="lbl">The deep look</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.55;">Once a week, the Overseer steps back across every system and tells you the patterns and the one thing to change.</p>
     ${S.briefing?`<div class="briefing">${esc(S.briefing)}</div>`:""}
     <button class="solid" style="margin-top:12px;" id="rvb" onclick="review()">Run the review</button>
-    <div class="statline">This is the one worth running on Opus later — the smart layer.</div>
-  </div>`;
-}
-async function review(){ const b=$("#rvb"); if(b){b.disabled=true;b.textContent="Thinking…";}
-  try{ const t=await callApi(snapshot()+"\n\nStep back and do my weekly review: the 2 patterns that matter, what's working, the ONE thing to change next week. Direct, not soft.");
-    S.briefing=t; save(); render(); }
-  catch(e){ S.briefing="Error: "+e.message; render(); } }
+    <div class="statline">Worth running on Opus later — the smart layer.</div></div>`;}
+async function review(){const b=$("#rvb");if(b){b.disabled=true;b.textContent="Thinking…";}try{const t=await callApi(snapshot()+"\n\nStep back and do my weekly review: the 2 patterns that matter, what's working, the ONE thing to change next week. Direct, not soft.");S.briefing=t;save();render();}catch(e){S.briefing="Error: "+e.message;render();}}
 
-function go(key){ view=key; const sc=$("#scroll"); if(sc) sc.scrollTop=0; render(); }
-function render(){ $("#scroll").innerHTML = view==="home" ? renderHome() : detail(view); renderNav(); }
-function renderNav(){
-  const items=[{k:"home",i:"⌂",l:"Command"},{k:"capture",i:"＋",l:"Capture"},{k:"overseer",i:"✦",l:"Overseer"}];
-  $("#nav").innerHTML=items.map(x=>`<button class="${view===x.k?'on':''}" onclick="go('${x.k}')"><span class="ico">${x.i}</span>${x.l}</button>`).join("");
-}
-function tick(){ const d=now(); $("#clock").textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+" · "+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
-tick(); setInterval(tick,30000);
+function go(key){view=key;const sc=$("#scroll");if(sc)sc.scrollTop=0;render();}
+function render(){$("#scroll").innerHTML=view==="home"?renderHome():detail(view);renderNav();}
+function renderNav(){const items=[{k:"home",i:"◎",l:"Command"},{k:"capture",i:"＋",l:"Capture"},{k:"overseer",i:"◈",l:"Overseer"}];$("#nav").innerHTML=items.map(x=>`<button class="${view===x.k?'on':''}" onclick="go('${x.k}')"><span class="ico">${x.i}</span>${x.l}</button>`).join("");}
+function tick(){const d=new Date();$("#clock").textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" · "+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
+tick();setInterval(tick,30000);
 render();
 </script>
 </body>

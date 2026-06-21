@@ -3,143 +3,437 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>StartLine — Command</title>
+<title>Overseer — Command</title>
 <style>
-  :root{--bg:#09090b;--panel:#18181b;--line:#27272a;--txt:#fafafa;--muted:#a1a1aa;--dim:#71717a;--amber:#fbbf24;--green:#34d399;}
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+  :root{
+    --bg:#100f12; --panel:#1a181d; --panel2:#211e25; --line:#2c2932; --line2:#3a3742;
+    --txt:#f2f0f4; --muted:#a8a4b0; --dim:#706c79;
+    --amber:#f6b352; --green:#5fd08a; --rose:#f0788c;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --disp:"Space Grotesk",var(--sans);
+    --mono:"Space Mono",ui-monospace,Menlo,monospace;
+  }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
-  .wrap{max-width:480px;margin:0 auto;padding:22px 18px 60px;}
-  .eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);}
-  header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:20px;}
-  .big{font-size:34px;font-weight:800;letter-spacing:-.02em;}
-  .call{font-size:14px;font-weight:600;}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
-  .row{display:flex;align-items:center;gap:10px;}
-  input,textarea{background:#0c0c0e;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px;font-size:14px;width:100%;outline:none;font-family:inherit;}
-  input:focus,textarea:focus{border-color:#52525b;}
-  button{border:0;border-radius:10px;font-weight:600;font-size:14px;padding:10px 14px;cursor:pointer;font-family:inherit;}
-  .primary{background:var(--amber);color:#09090b;}
-  .ghost{background:transparent;border:1px solid var(--line);color:var(--txt);}
-  .goal{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;}
-  .check{width:22px;height:22px;border:1px solid #52525b;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;font-size:13px;}
-  .check.on{background:rgba(52,211,153,.2);border-color:var(--green);color:var(--green);}
-  .done{color:var(--dim);text-decoration:line-through;}
-  .del{margin-left:auto;color:#3f3f46;background:none;padding:4px;}
-  .slabel{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:6px;}
-  input[type=range]{accent-color:var(--amber);padding:0;}
-  .briefing{white-space:pre-wrap;line-height:1.5;font-size:14px;background:#0c0c0e;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:12px;}
-  .mono{font-family:ui-monospace,Menlo,monospace;}
-  .dim{color:var(--dim);} .amber{color:var(--amber);}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--sans);}
+  body{min-height:100vh;}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;}
+  .scroll{flex:1;overflow-y:auto;padding:0 18px 96px;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 10px;}
+  .wordmark{font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;}
+  .clock{font-family:var(--mono);font-size:12px;color:var(--dim);}
+  .lbl{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);}
+  .disp{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;}
+
+  .hero{position:relative;padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow:hidden;}
+  .hero::before{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;border-radius:50%;
+    background:radial-gradient(circle,rgba(246,179,82,.16),transparent 70%);pointer-events:none;}
+  .hero .read{font-family:var(--disp);font-weight:500;font-size:19px;line-height:1.35;letter-spacing:-.01em;max-width:90%;}
+  .hero .read .muted{color:var(--dim);}
+  .statusword{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-family:var(--mono);font-weight:700;
+    font-size:13px;letter-spacing:.12em;text-transform:uppercase;}
+  .briefbtn{margin-top:14px;border:1px solid var(--line2);background:transparent;color:var(--muted);
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;border-radius:9px;cursor:pointer;}
+  .briefbtn:active{background:var(--panel);}
+
+  .console{display:flex;flex-direction:column;gap:7px;}
+  .row{display:grid;grid-template-columns:auto 78px 1fr auto;align-items:center;gap:12px;
+    background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:14px 14px;cursor:pointer;
+    text-align:left;width:100%;color:var(--txt);transition:border-color .15s,background .15s;}
+  .row:active{background:var(--panel2);}
+  .row:hover{border-color:var(--line2);}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+  .dot.go{background:var(--green);} .dot.watch{background:var(--amber);} .dot.behind{background:var(--rose);}
+  .row.behind .dot{animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .rlabel{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .track{position:relative;height:4px;border-radius:2px;background:var(--line);overflow:visible;}
+  .fill{position:absolute;left:0;top:0;height:100%;border-radius:2px;}
+  .fill.go{background:var(--green);} .fill.watch{background:var(--amber);} .fill.behind{background:var(--rose);}
+  .pip{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);border:2px solid var(--bg);}
+  .pip.go{background:var(--green);} .pip.watch{background:var(--amber);} .pip.behind{background:var(--rose);}
+  .rright{display:flex;flex-direction:column;align-items:flex-end;gap:2px;min-width:64px;}
+  .rval{font-family:var(--disp);font-weight:700;font-size:16px;line-height:1;}
+  .rstate{font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
+  .rstate.go{color:var(--green);} .rstate.watch{color:var(--amber);} .rstate.behind{color:var(--rose);}
+
+  .back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:14px 0 6px;}
+  .dtitle{font-family:var(--disp);font-weight:700;font-size:28px;letter-spacing:-.02em;margin:2px 0 16px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;}
+  .card .lbl{margin-bottom:12px;}
+  .item{display:flex;align-items:center;gap:11px;padding:11px;border:1px solid var(--line);border-radius:11px;margin-bottom:8px;background:var(--panel);}
+  .check{width:21px;height:21px;border:1px solid var(--line2);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:var(--green);font-size:13px;}
+  .check.on{background:rgba(95,208,138,.16);border-color:var(--green);}
+  .strike{color:var(--dim);text-decoration:line-through;}
+  .del{margin-left:auto;background:none;border:0;color:#46434d;cursor:pointer;font-size:15px;padding:4px;}
+  input,textarea,select{background:#0c0b0e;border:1px solid var(--line);color:var(--txt);border-radius:10px;
+    padding:11px;font-size:14px;width:100%;outline:none;font-family:var(--sans);}
+  input:focus,textarea:focus{border-color:var(--line2);}
+  input::placeholder,textarea::placeholder{color:#5a5662;}
+  input[type=range]{accent-color:var(--amber);padding:0;background:transparent;}
+  .rowflex{display:flex;gap:9px;align-items:center;}
+  button.add{background:var(--amber);color:#100f12;border:0;border-radius:10px;font-weight:700;font-family:var(--mono);
+    font-size:13px;padding:0 16px;height:44px;cursor:pointer;flex-shrink:0;}
+  button.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt);border-radius:10px;
+    font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:11px;cursor:pointer;width:100%;text-transform:uppercase;}
+  button.solid{background:var(--amber);color:#100f12;border:0;border-radius:10px;font-weight:700;font-family:var(--mono);
+    font-size:13px;padding:13px;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:.06em;}
+  .slabel{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px;}
+  .slabel .v{font-family:var(--mono);color:var(--txt);}
+  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;
+    padding:6px 11px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;}
+  .pill.go{color:var(--green);border-color:rgba(95,208,138,.4);} .pill.watch{color:var(--amber);border-color:rgba(246,179,82,.4);}
+  .briefing{white-space:pre-wrap;line-height:1.55;font-size:14px;background:#0c0b0e;border:1px solid var(--line);border-radius:12px;padding:15px;margin-top:12px;}
+  .empty{border:1px dashed var(--line2);border-radius:11px;padding:18px;text-align:center;color:var(--dim);font-size:13px;}
+  .statline{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:10px;line-height:1.5;}
+
+  .nav{position:sticky;bottom:0;display:flex;background:rgba(16,15,18,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line);}
+  .nav button{flex:1;background:none;border:0;color:var(--dim);padding:13px 0 16px;display:flex;flex-direction:column;
+    align-items:center;gap:5px;cursor:pointer;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;}
+  .nav button.on{color:var(--amber);}
+  .nav .ico{font-size:18px;line-height:1;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="row" style="justify-content:space-between;">
-      <span class="eyebrow">StartLine · Command</span>
-      <span class="eyebrow" id="date"></span>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px;">
-      <div>
-        <div class="big"><span id="doneCount">0</span><span class="dim">/<span id="totalCount">0</span></span></div>
-        <div class="eyebrow" style="margin-top:2px;">goals cleared</div>
-      </div>
-      <div style="text-align:right;max-width:55%;">
-        <div class="call amber" id="callText">no call yet</div>
-        <div class="eyebrow" style="margin-top:2px;">today's call</div>
-      </div>
-    </div>
-  </header>
-
-  <div class="eyebrow" style="margin-bottom:10px;">Today</div>
-  <div id="goals"></div>
-  <div class="row" style="margin-bottom:22px;">
-    <input id="goalInput" placeholder="Add a goal…" onkeydown="if(event.key==='Enter')addGoal()" />
-    <button class="primary" onclick="addGoal()">Add</button>
-  </div>
-
-  <div class="card">
-    <div class="eyebrow" style="margin-bottom:12px;">Body · today</div>
-    <div class="slabel"><span>Sleep</span><span class="mono" id="sleepVal">7 h</span></div>
-    <input type="range" min="3" max="11" step="0.5" id="sleep" oninput="onBody()" />
-    <div class="slabel" style="margin-top:14px;"><span>HRV (ms)</span><span class="mono" id="hrvVal">—</span></div>
-    <input id="hrv" placeholder="from your watch / Athlytic" oninput="onBody()" inputmode="numeric" />
-    <div class="slabel" style="margin-top:14px;"><span>Resting HR (bpm)</span><span class="mono" id="rhrVal">—</span></div>
-    <input id="rhr" placeholder="from your watch" oninput="onBody()" inputmode="numeric" />
-  </div>
-
-  <div class="card">
-    <div class="row"><span class="amber">✦</span><span class="eyebrow">The Overseer</span></div>
-    <div class="dim" style="font-size:12px;margin-top:4px;">Reads your goals + body and gives the call.</div>
-    <div id="briefing" class="briefing" style="display:none;"></div>
-    <div class="row" style="margin-top:12px;">
-      <input id="msg" placeholder="Message the Overseer…" onkeydown="if(event.key==='Enter')ask()" />
-      <button class="ghost" id="sendBtn" onclick="ask()">Send</button>
-    </div>
-    <button class="primary" style="width:100%;margin-top:8px;" id="briefBtn" onclick="brief()">Brief me</button>
-  </div>
+<div class="app">
+  <div class="topbar"><span class="wordmark">Overseer</span><span class="clock" id="clock"></span></div>
+  <div class="scroll" id="scroll"></div>
+  <nav class="nav" id="nav"></nav>
 </div>
-
 <script>
-  const $ = id => document.getElementById(id);
-  const today = () => new Date().toISOString().slice(0,10);
-  let state = load();
+const $ = s => document.querySelector(s);
+const today = () => new Date().toISOString().slice(0,10);
+const now = () => new Date();
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let view = "home";
 
-  function load(){
-    try{
-      const s = JSON.parse(localStorage.getItem("startline")||"null");
-      if(s){ if(s.day!==today()){ s.goals=(s.goals||[]).filter(g=>!g.done&&!g.d); s.day=today(); } return s; }
-    }catch(e){}
-    return { day:today(), goals:[{t:"Script Loose Ends Ep 2",d:false},{t:"Train — log top sets",d:false}], sleep:7, hrv:"", rhr:"", call:"" };
-  }
-  function save(){ localStorage.setItem("startline", JSON.stringify(state)); }
-  function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fresh(){ return {
+  day: today(),
+  body:{sleep:7, hrv:"", rhr:"", trained:false, fuel:false, water:0},
+  focus:{sessions:0, goal:3, oneThing:"", distractions:0},
+  mind:{windDown:false, reflection:"", mood:3},
+  create:[{t:"Loose Ends Ep 2", stage:"Idea"}],
+  capture:[],
+  school:[],
+  work:[{t:"StartLine — next build session", due:"", done:false}],
+  money:{subs:[{name:"Claude API", cost:0, cycle:"mo"}]},
+  care:{day:today(), am:[{l:"LRP cleanser",d:false},{l:"Moisturizer",d:false},{l:"Sunscreen",d:false}],
+        pm:[{l:"Cleanse",d:false},{l:"Differin / treat",d:false},{l:"Moisturize",d:false}], dates:[]},
+  wins:[],
+  call:"", briefing:""
+};}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem("overseer-v2")||"null");
+    if(s){
+      if(s.day!==today()){
+        s.body.trained=false; s.body.fuel=false; s.body.water=0;
+        s.focus.sessions=0; s.focus.oneThing=""; s.focus.distractions=0;
+        s.mind.windDown=false; s.mind.reflection="";
+        if(s.care.day!==today()){ s.care.am.forEach(x=>x.d=false); s.care.pm.forEach(x=>x.d=false); s.care.day=today(); }
+        s.day=today();
+      }
+      const f=fresh(); return {...f,...s, body:{...f.body,...s.body}, focus:{...f.focus,...s.focus},
+        mind:{...f.mind,...s.mind}, money:{...f.money,...s.money}, care:{...f.care,...s.care}};
+    }
+  }catch(e){}
+  return fresh();
+}
+let S = load();
+function save(){ localStorage.setItem("overseer-v2", JSON.stringify(S)); }
 
-  function render(){
-    $("date").textContent = today();
-    $("callText").textContent = state.call || "no call yet";
-    const g=$("goals"); g.innerHTML="";
-    state.goals.forEach((goal,i)=>{
-      const row=document.createElement("div"); row.className="goal";
-      row.innerHTML = `<div class="check ${goal.d?'on':''}" onclick="toggle(${i})">${goal.d?'✓':''}</div>
-        <span class="${goal.d?'done':''}" style="flex:1">${esc(goal.t)}</span>
-        <button class="del" onclick="delGoal(${i})">✕</button>`;
-      g.appendChild(row);
-    });
-    $("doneCount").textContent = state.goals.filter(x=>x.d).length;
-    $("totalCount").textContent = state.goals.length;
-    $("sleep").value=state.sleep; $("sleepVal").textContent=state.sleep+" h";
-    $("hrv").value=state.hrv; $("hrvVal").textContent=state.hrv||"—";
-    $("rhr").value=state.rhr; $("rhrVal").textContent=state.rhr||"—";
-  }
-  function addGoal(){ const v=$("goalInput").value.trim(); if(!v)return; state.goals.push({t:v,d:false}); $("goalInput").value=""; save(); render(); }
-  function toggle(i){ state.goals[i].d=!state.goals[i].d; save(); render(); }
-  function delGoal(i){ state.goals.splice(i,1); save(); render(); }
-  function onBody(){ state.sleep=$("sleep").value; state.hrv=$("hrv").value; state.rhr=$("rhr").value; save(); render(); }
+function streak(dates){
+  const set=new Set(dates||[]); let n=0; let d=new Date();
+  const f=x=>x.toISOString().slice(0,10);
+  if(!set.has(f(d))) d.setDate(d.getDate()-1);
+  while(set.has(f(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function daysUntil(due){ if(!due) return 99; return Math.ceil((new Date(due+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000); }
+function daysAgo(date){ return Math.abs(Math.ceil((new Date(today()+"T00:00:00")-new Date((date||today())+"T00:00:00"))/86400000)); }
 
-  async function callOverseer(message){
-    const r = await fetch("/api/overseer",{ method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({message}) });
-    const data = await r.json();
-    if(data.error) throw new Error(data.error);
-    return data.text;
-  }
-  function showBrief(t){ const b=$("briefing"); b.style.display="block"; b.textContent=t; }
+const AREAS = [
+  {key:"body", label:"Body", status(){
+    const sl=parseFloat(S.body.sleep)||0;
+    let cls = sl>=7.5 ? "go" : sl>=6 ? "watch" : "behind";
+    return {cls, word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[cls], val: S.body.hrv? S.body.hrv : sl+"h", fill: Math.min(sl/9,1)};
+  }},
+  {key:"focus", label:"Focus", status(){
+    const s=S.focus.sessions, g=S.focus.goal;
+    let cls = s>=g?"go":s>=1?"watch":"behind";
+    return {cls, word:{go:"DIALED",watch:"WARMING",behind:"IDLE"}[cls], val:s+"/"+g, fill:Math.min(s/g,1)};
+  }},
+  {key:"mind", label:"Mind", status(){
+    const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);
+    let cls = n>=2?"go":n===1?"watch":"behind";
+    return {cls, word:{go:"CLEAR",watch:"OK",behind:"UNSET"}[cls], val:S.mind.mood+"/5", fill:S.mind.mood/5};
+  }},
+  {key:"create", label:"Create", status(){
+    const active=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;
+    const posted=S.create.filter(c=>c.stage==="Posted").length;
+    let cls = active>0?"go":S.create.length>0?"watch":"behind";
+    return {cls, word:{go:"SHIPPING",watch:"IN MOTION",behind:"STALLED"}[cls], val:S.create.length+"", fill: S.create.length? (posted+active)/S.create.length : 0};
+  }},
+  {key:"capture", label:"Inbox", status(){
+    const n=S.capture.length;
+    let cls = n===0?"go":n<=4?"watch":"behind";
+    return {cls, word:{go:"CLEAR",watch:"TO SORT",behind:"PILING UP"}[cls], val:n+"", fill: n? Math.min(n/8,1):0};
+  }},
+  {key:"school", label:"School", status(){
+    const open=S.school.filter(x=>!x.done);
+    const over=open.filter(x=>daysUntil(x.due)<0).length;
+    const soon=open.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;
+    let cls = over>0?"behind":soon>0?"watch":"go";
+    return {cls, word:{go:"ON TOP",watch:"DUE SOON",behind:"OVERDUE"}[cls], val:open.length+"", fill: open.length?Math.min(open.length/6,1):0};
+  }},
+  {key:"work", label:"Work", status(){
+    const open=S.work.filter(x=>!x.done);
+    const over=open.filter(x=>daysUntil(x.due)<0).length;
+    let cls = over>0?"behind":open.length?"watch":"go";
+    return {cls, word:{go:"ON TRACK",watch:"ACTIVE",behind:"OVERDUE"}[cls], val:open.length+"", fill: open.length?Math.min(open.length/6,1):0};
+  }},
+  {key:"care", label:"Care", status(){
+    const am=S.care.am.every(x=>x.d), pm=S.care.pm.every(x=>x.d);
+    let cls = (am&&pm)?"go":(am||pm)?"watch":"behind";
+    return {cls, word:{go:"KEPT",watch:"HALF",behind:"SKIPPED"}[cls], val:streak(S.care.dates)+"d", fill:(S.care.am.filter(x=>x.d).length+S.care.pm.filter(x=>x.d).length)/(S.care.am.length+S.care.pm.length)};
+  }},
+  {key:"money", label:"Money", status(){
+    const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);
+    return {cls:"go", word:"STEADY", val:"$"+m.toFixed(0), fill:0.5};
+  }},
+  {key:"wins", label:"Wins", status(){
+    const wk=S.wins.filter(w=>daysAgo(w.date)<=7).length;
+    let cls = wk>0?"go":"behind";
+    return {cls, word:{go:"LOGGED",behind:"NONE YET"}[cls], val:wk+"", fill:Math.min(wk/5,1)};
+  }},
+];
 
-  async function brief(){
-    const b=$("briefBtn"); b.disabled=true; b.textContent="Reading the signals…";
-    const summary = `Goals today:\n${state.goals.map(g=>`- [${g.d?'x':' '}] ${g.t}`).join("\n")}\nLast night: ${state.sleep}h sleep, HRV ${state.hrv||'unknown'}, resting HR ${state.rhr||'unknown'}.\nGive me my briefing and today's call.`;
-    try{ const text=await callOverseer(summary); state.call=text.split("\n")[0].replace(/[*#]/g,"").slice(0,40); save(); showBrief(text); render(); }
-    catch(e){ showBrief("Couldn't reach the Overseer: "+e.message); }
-    b.disabled=false; b.textContent="Brief me";
-  }
-  async function ask(){
-    const m=$("msg").value.trim(); if(!m)return;
-    const b=$("sendBtn"); b.disabled=true; b.textContent="…";
-    try{ showBrief(await callOverseer(m)); $("msg").value=""; }
-    catch(e){ showBrief("Error: "+e.message); }
-    b.disabled=false; b.textContent="Send";
-  }
-  render();
+function overallWord(){
+  const s = AREAS.map(a=>a.status().cls);
+  if(s.includes("behind")) return {cls:"behind", word:"NEEDS ATTENTION"};
+  if(s.filter(x=>x==="watch").length>=2) return {cls:"watch", word:"STEADY"};
+  return {cls:"go", word:"DIALED IN"};
+}
+function renderHome(){
+  const ov = overallWord();
+  const call = S.call || "Tap Brief me and I'll read your day.";
+  let rows = AREAS.map(a=>{
+    const st=a.status(); const pct=Math.round(st.fill*100);
+    return `<button class="row ${st.cls}" onclick="go('${a.key}')">
+      <span class="dot ${st.cls}"></span>
+      <span class="rlabel">${a.label}</span>
+      <span class="track"><span class="fill ${st.cls}" style="width:${pct}%"></span><span class="pip ${st.cls}" style="left:${pct}%"></span></span>
+      <span class="rright"><span class="rval">${esc(st.val)}</span><span class="rstate ${st.cls}">${st.word}</span></span>
+    </button>`;
+  }).join("");
+  return `
+    <div class="hero">
+      <div class="lbl">Today's read</div>
+      <div class="read" style="margin-top:10px;">${esc(call)}</div>
+      <div class="statusword"><span class="dot ${ov.cls}"></span><span class="rstate ${ov.cls}" style="font-size:13px;">${ov.word}</span></div>
+      <button class="briefbtn" id="hbrief" onclick="brief()">↻ Brief me</button>
+    </div>
+    <div class="lbl" style="margin:4px 0 10px;">Where you stand</div>
+    <div class="console">${rows}</div>
+    <div style="margin-top:16px;"><button class="ghost" onclick="go('review')">↗ Weekly deep review</button></div>
+  `;
+}
+
+function persist(){ save(); render(); }
+function addTo(list, obj){ S[list].push(obj); persist(); }
+function rm(list, i){ S[list].splice(i,1); persist(); }
+function header(title){ return `<button class="back" onclick="go('home')">← Command</button><div class="dtitle">${title}</div>`; }
+
+function detail(key){
+  const map={body:bodyView,focus:focusView,mind:mindView,create:createView,capture:captureView,
+    school:schoolView,work:workView,money:moneyView,care:careView,wins:winsView,overseer:overseerView,review:reviewView};
+  return (map[key]||(()=>header("—")+`<div class="empty">Coming soon.</div>`))();
+}
+
+function bodyView(){ const b=S.body; return header("Body")+`
+  <div class="card">
+    <div class="lbl">Recovery · today</div>
+    <div class="slabel"><span>Sleep</span><span class="v" id="slv">${b.sleep} h</span></div>
+    <input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">
+    <div class="slabel" style="margin-top:14px;"><span>HRV (ms)</span></div>
+    <input value="${esc(b.hrv)}" inputmode="numeric" placeholder="from Athlytic / your watch" oninput="S.body.hrv=this.value;save();">
+    <div class="slabel" style="margin-top:14px;"><span>Resting HR (bpm)</span></div>
+    <input value="${esc(b.rhr)}" inputmode="numeric" placeholder="from your watch" oninput="S.body.rhr=this.value;save();">
+    <div class="statline">Auto-feed from Apple Health is the next build — these go automatic.</div>
+  </div>
+  <div class="card">
+    <div class="lbl">Done today</div>
+    <div class="item"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained (logged in Hevy)</span></div>
+    <div class="item"><div class="check ${b.fuel?'on':''}" onclick="S.body.fuel=!S.body.fuel;persist();">${b.fuel?'✓':''}</div><span class="${b.fuel?'strike':''}">Ate enough to recover</span></div>
+    <div class="slabel" style="margin-top:6px;"><span>Water</span><span class="v">${b.water} cups</span></div>
+    <div class="rowflex"><button class="ghost" onclick="S.body.water=Math.max(0,S.body.water-1);persist();">−</button><button class="ghost" onclick="S.body.water++;persist();">+ cup</button></div>
+  </div>`;
+}
+function focusView(){ const f=S.focus; return header("Focus")+`
+  <div class="card">
+    <div class="lbl">The one thing today</div>
+    <input value="${esc(f.oneThing)}" placeholder="If only one thing gets done…" oninput="S.focus.oneThing=this.value;save();">
+  </div>
+  <div class="card">
+    <div class="lbl">Deep work sessions</div>
+    <div style="display:flex;align-items:baseline;gap:8px;"><span class="disp" style="font-size:40px;">${f.sessions}</span><span class="lbl">/ ${f.goal} today</span></div>
+    <div class="rowflex" style="margin-top:12px;"><button class="ghost" onclick="S.focus.sessions=Math.max(0,S.focus.sessions-1);persist();">−</button><button class="solid" onclick="S.focus.sessions++;persist();">+ logged a session</button></div>
+    <div class="slabel" style="margin-top:16px;"><span>Distractions caught</span><span class="v">${f.distractions}</span></div>
+    <button class="ghost" onclick="S.focus.distractions++;persist();">+ I caught myself drifting</button>
+    <div class="statline">Honesty here is the point — the Overseer reads it.</div>
+  </div>`;
+}
+function mindView(){ const m=S.mind; return header("Mind")+`
+  <div class="card">
+    <div class="lbl">Wind-down</div>
+    <div class="item"><div class="check ${m.windDown?'on':''}" onclick="S.mind.windDown=!S.mind.windDown;persist();">${m.windDown?'✓':''}</div><span class="${m.windDown?'strike':''}">Screens down, lights low, ready to sleep</span></div>
+    <div class="slabel" style="margin-top:8px;"><span>Mood / energy</span><span class="v">${m.mood}/5</span></div>
+    <input type="range" min="1" max="5" step="1" value="${m.mood}" oninput="S.mind.mood=+this.value;save();render();">
+  </div>
+  <div class="card">
+    <div class="lbl">One line on today</div>
+    <textarea rows="3" placeholder="What's on your mind? One honest sentence." oninput="S.mind.reflection=this.value;save();">${esc(m.reflection)}</textarea>
+  </div>`;
+}
+const STAGES=["Idea","Scripting","Recording","Editing","Posted"];
+function createView(){ return header("Create")+`
+  <div class="card">
+    <div class="lbl">Loose Ends + vlog pipeline</div>
+    ${S.create.length?S.create.map((c,i)=>{
+      const cls = c.stage==="Posted"?"go":(c.stage==="Editing"||c.stage==="Recording")?"watch":"";
+      return `<div class="item"><span style="flex:1">${esc(c.t)}</span>
+        <span class="pill ${cls}" onclick="S.create[${i}].stage=STAGES[(STAGES.indexOf(S.create[${i}].stage)+1)%5];persist();">${c.stage} →</span>
+        <button class="del" onclick="rm('create',${i})">✕</button></div>`;
+    }).join(""):`<div class="empty">No projects yet. Add one below.</div>`}
+    <div class="rowflex" style="margin-top:10px;"><input id="ci" placeholder="New episode or video…"><button class="add" onclick="if($('#ci').value.trim()){addTo('create',{t:$('#ci').value.trim(),stage:'Idea'});}">Add</button></div>
+  </div>`;
+}
+function captureView(){ return header("Inbox")+`
+  <div class="card">
+    <div class="lbl">Everything lands here first</div>
+    <div class="rowflex" style="margin-bottom:12px;"><input id="capi" placeholder="Dump any idea, task, or spark…" onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('capture',{t:this.value.trim()});}"><button class="add" onclick="if($('#capi').value.trim()){addTo('capture',{t:$('#capi').value.trim()});}">Add</button></div>
+    ${S.capture.length?S.capture.map((c,i)=>`<div class="item"><span style="flex:1">${esc(c.t)}</span><button class="del" onclick="rm('capture',${i})">✕</button></div>`).join(""):`<div class="empty">Clear. Nothing waiting to be sorted.</div>`}
+    <div class="statline">Sort it later. The point is you never lose it.</div>
+  </div>`;
+}
+function listView(title, listKey, withDue, note){
+  const items=S[listKey];
+  return header(title)+`
+  <div class="card">
+    <div class="lbl">${withDue?"Assignments & tests":"Next actions"}</div>
+    ${items.length?items.map((x,i)=>{
+      const du=withDue?daysUntil(x.due):99;
+      const dcls = x.done?"":du<0?"behind":du<=2?"watch":"go";
+      const dtxt = withDue&&x.due ? (x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")) : "";
+      return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S['${listKey}'][${i}].done=!S['${listKey}'][${i}].done;persist();">${x.done?'✓':''}</div>
+        <span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>
+        ${dtxt?`<span class="rstate ${dcls}" style="font-size:10px;">${dtxt}</span>`:""}
+        <button class="del" onclick="rm('${listKey}',${i})">✕</button></div>`;
+    }).join(""):`<div class="empty">Nothing here yet.</div>`}
+    <div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add…">${withDue?`<input id="ld" type="date" style="max-width:150px;">`:""}<button class="add" onclick="if($('#li').value.trim()){addTo('${listKey}',{t:$('#li').value.trim(),due:${withDue?"$('#ld').value":"''"},done:false});}">Add</button></div>
+  </div>${note?`<div class="card"><div class="statline">${note}</div></div>`:""}`;
+}
+function schoolView(){ return listView("School","school",true,"Canvas auto-import is the next build — your assignments will fill in on their own."); }
+function workView(){ return listView("Work","work",true,""); }
+function moneyView(){ const subs=S.money.subs; const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);
+  return header("Money")+`
+  <div class="card">
+    <div class="lbl">Monthly burn</div>
+    <div class="disp" style="font-size:36px;">$${m.toFixed(2)}<span class="lbl"> /mo</span></div>
+    <div class="statline">≈ $${(m*12).toFixed(0)} / year</div>
+  </div>
+  <div class="card">
+    <div class="lbl">Subscriptions</div>
+    ${subs.map((s,i)=>`<div class="item"><span style="flex:1">${esc(s.name)}</span><span class="v" style="font-family:var(--mono)">$${(Number(s.cost)||0).toFixed(2)}</span>
+      <span class="pill" onclick="S.money.subs[${i}].cycle=S.money.subs[${i}].cycle==='mo'?'yr':'mo';persist();">${s.cycle}</span>
+      <button class="del" onclick="S.money.subs.splice(${i},1);persist();">✕</button></div>`).join("")}
+    <div class="rowflex" style="margin-top:10px;"><input id="mn" placeholder="Service"><input id="mc" type="number" inputmode="decimal" placeholder="$" style="max-width:90px;"><button class="add" onclick="if($('#mn').value.trim()){S.money.subs.push({name:$('#mn').value.trim(),cost:Number($('#mc').value)||0,cycle:'mo'});persist();}">Add</button></div>
+  </div>`;
+}
+function careView(){ const c=S.care;
+  const grp=(title,arr,key)=>`<div class="card"><div class="lbl">${title}</div>${arr.map((x,i)=>`<div class="item"><div class="check ${x.d?'on':''}" onclick="toggleCare('${key}',${i})">${x.d?'✓':''}</div><span class="${x.d?'strike':''}">${esc(x.l)}</span></div>`).join("")}</div>`;
+  return header("Care")+`
+  <div class="card" style="display:flex;align-items:center;gap:14px;">
+    <span class="disp" style="font-size:32px;color:var(--amber);">${streak(c.dates)}</span>
+    <div><div class="lbl">day streak</div><div style="font-size:13px;color:var(--muted);margin-top:2px;">full AM + PM</div></div>
+  </div>
+  ${grp("Morning",c.am,"am")}${grp("Night",c.pm,"pm")}`;
+}
+function toggleCare(g,i){ S.care[g][i].d=!S.care[g][i].d;
+  const full=S.care.am.every(x=>x.d)&&S.care.pm.every(x=>x.d);
+  S.care.dates=(S.care.dates||[]).filter(d=>d!==today());
+  if(full) S.care.dates.push(today());
+  persist();
+}
+function winsView(){ return header("Wins")+`
+  <div class="card">
+    <div class="lbl">What you actually shipped</div>
+    <div class="rowflex" style="margin-bottom:12px;"><input id="wi" placeholder="Something you finished…" onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('wins',{t:this.value.trim(),date:today()});}"><button class="add" onclick="if($('#wi').value.trim()){addTo('wins',{t:$('#wi').value.trim(),date:today()});}">Log</button></div>
+    ${S.wins.length?S.wins.slice().reverse().map(w=>`<div class="item"><span style="flex:1">${esc(w.t)}</span><span class="lbl">${w.date.slice(5)}</span></div>`).join(""):`<div class="empty">Empty for now. Log the first thing you finish today.</div>`}
+    <div class="statline">Proof, for the days it feels like nothing's getting done.</div>
+  </div>`;
+}
+
+function snapshot(){
+  const a=AREAS.map(x=>{const s=x.status();return `${x.label}: ${s.word} (${s.val})`;}).join("; ");
+  const sch=S.school.filter(x=>!x.done).map(x=>x.t+(x.due?` [due ${x.due}]`:"")).join(", ")||"none";
+  return `Standing — ${a}.
+Body: ${S.body.sleep}h sleep, HRV ${S.body.hrv||'?'}, RHR ${S.body.rhr||'?'}, trained ${S.body.trained}.
+Focus: ${S.focus.sessions}/${S.focus.goal} sessions, one thing: "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.
+Open school: ${sch}.
+Inbox to sort: ${S.capture.length}. Care streak: ${streak(S.care.dates)}d. Wins this week: ${AREAS.find(x=>x.key==='wins').status().val}.`;
+}
+async function callApi(message){
+  const r=await fetch("/api/overseer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message})});
+  const d=await r.json(); if(d.error) throw new Error(d.error); return d.text;
+}
+async function brief(){
+  const btn=$("#hbrief"); if(btn){btn.disabled=true;btn.textContent="reading…";}
+  try{
+    const t=await callApi(snapshot()+"\n\nGive me my read of the day: the call, then 2 specific moves. Tight.");
+    S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,120); S.briefing=t; save(); render();
+  }catch(e){ S.call="Couldn't reach the Overseer ("+e.message+")"; render(); }
+}
+function overseerView(){ return header("Overseer")+`
+  <div class="card">
+    <div class="lbl">It reads everything above</div>
+    ${S.briefing?`<div class="briefing">${esc(S.briefing)}</div>`:`<div class="empty">No briefing yet. Hit the button.</div>`}
+    <button class="solid" style="margin-top:12px;" id="ovb" onclick="brief2()">Read my whole day</button>
+    <div class="rowflex" style="margin-top:10px;"><input id="ovm" placeholder="Ask the Overseer anything…" onkeydown="if(event.key==='Enter')ask()"><button class="add" onclick="ask()">Send</button></div>
+  </div>`;
+}
+async function brief2(){ const b=$("#ovb"); if(b){b.disabled=true;b.textContent="Reading…";}
+  try{ const t=await callApi(snapshot()+"\n\nFull read: where I stand, what I'm drifting on, the one move now.");
+    S.briefing=t; S.call=t.split("\n").filter(x=>x.trim())[0].replace(/[*#]/g,"").slice(0,120); save(); render(); }
+  catch(e){ S.briefing="Error: "+e.message; render(); } }
+async function ask(){ const el=$("#ovm"); const m=el?el.value.trim():""; if(!m)return;
+  try{ const t=await callApi("My current standing:\n"+snapshot()+"\n\nNoah asks: "+m); S.briefing=t; save(); render(); }
+  catch(e){ S.briefing="Error: "+e.message; render(); } }
+function reviewView(){ return header("Weekly review")+`
+  <div class="card">
+    <div class="lbl">The deep look</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.5;">Once a week, the Overseer steps back and reads the whole picture — patterns across body, focus, school, and creative — and tells you what to change.</p>
+    ${S.briefing?`<div class="briefing">${esc(S.briefing)}</div>`:""}
+    <button class="solid" style="margin-top:12px;" id="rvb" onclick="review()">Run the review</button>
+    <div class="statline">This is the one worth running on Opus later — the smart layer.</div>
+  </div>`;
+}
+async function review(){ const b=$("#rvb"); if(b){b.disabled=true;b.textContent="Thinking…";}
+  try{ const t=await callApi(snapshot()+"\n\nStep back and do my weekly review: the 2 patterns that matter, what's working, the ONE thing to change next week. Direct, not soft.");
+    S.briefing=t; save(); render(); }
+  catch(e){ S.briefing="Error: "+e.message; render(); } }
+
+function go(key){ view=key; const sc=$("#scroll"); if(sc) sc.scrollTop=0; render(); }
+function render(){ $("#scroll").innerHTML = view==="home" ? renderHome() : detail(view); renderNav(); }
+function renderNav(){
+  const items=[{k:"home",i:"⌂",l:"Command"},{k:"capture",i:"＋",l:"Capture"},{k:"overseer",i:"✦",l:"Overseer"}];
+  $("#nav").innerHTML=items.map(x=>`<button class="${view===x.k?'on':''}" onclick="go('${x.k}')"><span class="ico">${x.i}</span>${x.l}</button>`).join("");
+}
+function tick(){ const d=now(); $("#clock").textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+" · "+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+tick(); setInterval(tick,30000);
+render();
 </script>
 </body>
 </html>

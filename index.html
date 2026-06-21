@@ -117,6 +117,7 @@ const $ = s => document.querySelector(s);
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let view="home";
+let LIVE={health:null,canvas:null};
 
 function fresh(){ return {
   day: today(),
@@ -155,14 +156,16 @@ function save(){ localStorage.setItem("overseer-v3", JSON.stringify(S)); }
 function streak(dates){const set=new Set(dates||[]);let n=0,d=new Date();const f=x=>x.toISOString().slice(0,10);if(!set.has(f(d)))d.setDate(d.getDate()-1);while(set.has(f(d))){n++;d.setDate(d.getDate()-1);}return n;}
 function daysUntil(due){if(!due)return 99;return Math.ceil((new Date(due+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000);}
 function daysAgo(date){return Math.abs(Math.ceil((new Date(today()+"T00:00:00")-new Date((date||today())+"T00:00:00"))/86400000));}
+function schoolAll(){return (LIVE.canvas||[]).map(c=>({t:c.title,due:c.due,done:false,canvas:true})).concat(S.school);}
+function liveBodyCard(h){if(!h)return "";return `<div class="card"><div class="lbl" style="color:var(--ai)">◈ Live · Apple Health</div><div class="rowflex" style="gap:22px;flex-wrap:wrap;align-items:flex-start;"><div><div class="disp" style="font-size:30px;">${h.sleep!=null?h.sleep:'—'}<span class="lbl"> h</span></div><div class="lbl">sleep</div></div><div><div class="disp" style="font-size:30px;">${h.hrv!=null?Math.round(h.hrv):'—'}<span class="lbl"> ms</span></div><div class="lbl">hrv</div></div><div><div class="disp" style="font-size:30px;">${h.rhr!=null?Math.round(h.rhr):'—'}</div><div class="lbl">rest hr</div></div></div><div class="statline">Pushed by your Shortcut${h.at?` · ${new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'})}`:''}.</div></div>`;}
 
 const AREAS=[
-  {key:"body",label:"Body",status(){const sl=parseFloat(S.body.sleep)||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c,word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[c],val:S.body.hrv?S.body.hrv:sl+"h",fill:Math.min(sl/9,1)};}},
+  {key:"body",label:"Body",status(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;const hv=h.hrv!=null?h.hrv:S.body.hrv;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c,word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[c],val:hv?String(Math.round(hv)):sl+"h",fill:Math.min(sl/9,1)};}},
   {key:"focus",label:"Focus",status(){const s=S.focus.sessions,g=S.focus.goal;let c=s>=g?"go":s>=1?"watch":"behind";return{cls:c,word:{go:"DIALED",watch:"WARMING",behind:"IDLE"}[c],val:s+"/"+g,fill:Math.min(s/g,1)};}},
   {key:"mind",label:"Mind",status(){const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);let c=n>=2?"go":n===1?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"OK",behind:"UNSET"}[c],val:S.mind.mood+"/5",fill:S.mind.mood/5};}},
   {key:"create",label:"Create",status(){const a=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;const p=S.create.filter(c=>c.stage==="Posted").length;let c=a>0?"go":S.create.length>0?"watch":"behind";return{cls:c,word:{go:"SHIPPING",watch:"IN MOTION",behind:"STALLED"}[c],val:S.create.length+"",fill:S.create.length?(p+a)/S.create.length:0};}},
   {key:"capture",label:"Inbox",status(){const n=S.capture.length;let c=n===0?"go":n<=4?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"TO SORT",behind:"PILING UP"}[c],val:n+"",fill:n?Math.min(n/8,1):0};}},
-  {key:"school",label:"School",status(){const o=S.school.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;const so=o.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;let c=ov>0?"behind":so>0?"watch":"go";return{cls:c,word:{go:"ON TOP",watch:"DUE SOON",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
+  {key:"school",label:"School",status(){const o=schoolAll().filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;const so=o.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;let c=ov>0?"behind":so>0?"watch":"go";return{cls:c,word:{go:"ON TOP",watch:"DUE SOON",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
   {key:"work",label:"Work",status(){const o=S.work.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;let c=ov>0?"behind":o.length?"watch":"go";return{cls:c,word:{go:"ON TRACK",watch:"ACTIVE",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
   {key:"care",label:"Care",status(){const am=S.care.am.every(x=>x.d),pm=S.care.pm.every(x=>x.d);let c=(am&&pm)?"go":(am||pm)?"watch":"behind";return{cls:c,word:{go:"KEPT",watch:"HALF",behind:"SKIPPED"}[c],val:streak(S.care.dates)+"d",fill:(S.care.am.filter(x=>x.d).length+S.care.pm.filter(x=>x.d).length)/(S.care.am.length+S.care.pm.length)};}},
   {key:"money",label:"Money",status(){const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return{cls:"go",word:"STEADY",val:"$"+m.toFixed(0),fill:.6};}},
@@ -227,7 +230,7 @@ function detail(key){
   return (map[key]||(()=>dhead("—")+`<div class="empty">Coming soon.</div>`))();
 }
 
-function bodyView(){const b=S.body;return dhead("Body")+`
+function bodyView(){const b=S.body;return dhead("Body")+liveBodyCard(LIVE.health)+`
   <div class="card"><div class="lbl">Recovery · today</div>
     <div class="slabel"><span>Sleep</span><span class="v" id="slv">${b.sleep} h</span></div>
     <input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">
@@ -235,7 +238,7 @@ function bodyView(){const b=S.body;return dhead("Body")+`
     <input value="${esc(b.hrv)}" inputmode="numeric" placeholder="from Athlytic / your watch" oninput="S.body.hrv=this.value;save();">
     <div class="slabel" style="margin-top:14px;"><span>Resting HR (bpm)</span></div>
     <input value="${esc(b.rhr)}" inputmode="numeric" placeholder="from your watch" oninput="S.body.rhr=this.value;save();">
-    <div class="statline">Apple Health auto-feed is the next wiring step — these fill in on their own.</div>
+    <div class="statline">When your Shortcut is set up, sleep/HRV/RHR fill in automatically (live card above). Hand-entry is the backup.</div>
   </div>
   <div class="card"><div class="lbl">Done today</div>
     <div class="item"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained (logged in Hevy)</span></div>
@@ -278,7 +281,14 @@ function listView(title,listKey,withDue,note){const items=S[listKey];return dhea
     ${items.length?items.map((x,i)=>{const du=withDue?daysUntil(x.due):99;const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=withDue&&x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S['${listKey}'][${i}].done=!S['${listKey}'][${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('${listKey}',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing here yet.</div>`}
     <div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add…">${withDue?`<input id="ld" type="date" style="max-width:148px;">`:""}<button class="add" onclick="if($('#li').value.trim()){addTo('${listKey}',{t:$('#li').value.trim(),due:${withDue?"$('#ld').value":"''"},done:false});}">Add</button></div></div>
   ${note?`<div class="card"><div class="statline">${note}</div></div>`:""}`;}
-function schoolView(){return listView("School","school",true,"Canvas auto-import is the next wiring step — your assignments will fill in on their own.");}
+function schoolView(){
+  const cv=LIVE.canvas||[];
+  const cvCard=cv.length?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ From Canvas · auto</div>${cv.map(c=>{const du=daysUntil(c.due);const dc=du<0?"behind":du<=2?"watch":"go";const dt=c.due?(du<0?(-du)+"d late":du===0?"today":du+"d"):"";return `<div class="item"><span class="dot ${dc}"></span><span style="flex:1">${esc(c.title)}${c.course?` <span class="lbl">· ${esc(c.course)}</span>`:''}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}</div>`;}).join("")}</div>`:"";
+  const items=S.school;
+  const manual=`<div class="card"><div class="lbl">Added by you</div>${items.length?items.map((x,i)=>{const du=daysUntil(x.due);const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S.school[${i}].done=!S.school[${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('school',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing added by hand.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add…"><input id="ld" type="date" style="max-width:148px;"><button class="add" onclick="if($('#li').value.trim()){addTo('school',{t:$('#li').value.trim(),due:$('#ld').value,done:false});}">Add</button></div></div>`;
+  const note=`<div class="card"><div class="statline">${cv.length?"Assignments are live from Canvas.":"Canvas isn't connected yet — once it is, assignments fill in here on their own. Until then, add them by hand."}</div></div>`;
+  return dhead("School")+cvCard+manual+note;
+}
 function workView(){return listView("Work","work",true,"");}
 
 function moneyView(){const subs=S.money.subs;const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return dhead("Money")+`
@@ -299,9 +309,10 @@ function winsView(){return dhead("Wins")+`
 
 function snapshot(){
   const a=AREAS.map(x=>{const s=x.status();return `${x.label}: ${s.word} (${s.val})`;}).join("; ");
-  const sch=S.school.filter(x=>!x.done).map(x=>x.t+(x.due?` [due ${x.due}]`:"")).join(", ")||"none";
+  const h=LIVE.health;
+  const sch=schoolAll().filter(x=>!x.done).map(x=>x.t+(x.due?` [due ${x.due}]`:"")).join(", ")||"none";
   return `Standing — ${a}.
-Body: ${S.body.sleep}h sleep, HRV ${S.body.hrv||'?'}, RHR ${S.body.rhr||'?'}, trained ${S.body.trained}.
+Body: ${h&&h.sleep!=null?h.sleep:S.body.sleep}h sleep, HRV ${h&&h.hrv!=null?Math.round(h.hrv):(S.body.hrv||'?')}, RHR ${h&&h.rhr!=null?Math.round(h.rhr):(S.body.rhr||'?')}, trained ${S.body.trained}.${h?' (live from Apple Health)':''}
 Focus: ${S.focus.sessions}/${S.focus.goal} sessions, one thing: "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.
 Open school: ${sch}.
 Inbox to sort: ${S.capture.length}. Care streak: ${streak(S.care.dates)}d.`;
@@ -326,12 +337,18 @@ function reviewView(){return dhead("Weekly review")+`
     <div class="statline">Worth running on Opus later — the smart layer.</div></div>`;}
 async function review(){const b=$("#rvb");if(b){b.disabled=true;b.textContent="Thinking…";}try{const t=await callApi(snapshot()+"\n\nStep back and do my weekly review: the 2 patterns that matter, what's working, the ONE thing to change next week. Direct, not soft.");S.briefing=t;save();render();}catch(e){S.briefing="Error: "+e.message;render();}}
 
+async function loadLive(){
+  try{const r=await fetch("/api/health");const d=await r.json();if(d&&d.ok&&d.data)LIVE.health=d.data;}catch(e){}
+  try{const r=await fetch("/api/canvas");const d=await r.json();if(d&&d.ok&&Array.isArray(d.items))LIVE.canvas=d.items;}catch(e){}
+  render();
+}
 function go(key){view=key;const sc=$("#scroll");if(sc)sc.scrollTop=0;render();}
 function render(){$("#scroll").innerHTML=view==="home"?renderHome():detail(view);renderNav();}
 function renderNav(){const items=[{k:"home",i:"◎",l:"Command"},{k:"capture",i:"＋",l:"Capture"},{k:"overseer",i:"◈",l:"Overseer"}];$("#nav").innerHTML=items.map(x=>`<button class="${view===x.k?'on':''}" onclick="go('${x.k}')"><span class="ico">${x.i}</span>${x.l}</button>`).join("");}
 function tick(){const d=new Date();$("#clock").textContent=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" · "+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
 tick();setInterval(tick,30000);
 render();
+loadLive();
 </script>
 </body>
 </html>

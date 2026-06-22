@@ -155,9 +155,29 @@ function trendChip(t,goodUp){if(!t||t.pct==null)return `<span class="trend flat"
 function metric(label,v,unit,t,goodUp){return `<div class="metric"><div class="lbl">${label}</div><div class="disp" style="font-size:26px;">${v!=null&&v!==""?Math.round(v*10)/10:'-'}<span class="lbl"> ${unit}</span></div>${trendChip(t,goodUp)}</div>`;}
 function arr(t,goodUp){if(!t||t.pct==null||t.pct===0)return'';const up=t.pct>0;const good=goodUp?up:!up;return `<span class="${good?'up':'down'}">${up?'▲':'▼'}</span>`;}
 
+// Recovery read - same idea as Athlytic: today's HRV vs your baseline (weighted highest),
+// resting HR vs baseline (inverted), and sleep. Computed from your own data, in your hub.
+function recoveryRead(){
+  const h=LIVE.health,tr=LIVE.trends||{};
+  if(!h||h.hrv==null)return null;
+  const clamp=x=>Math.max(0,Math.min(100,x));
+  const parts=[],weights=[],factors=[];
+  const hb=(tr.hrv&&tr.hrv.avg)?tr.hrv.avg:h.hrv;
+  if(hb){const s=clamp(50+((h.hrv/hb)-1)*250);parts.push(s);weights.push(.5);factors.push(`HRV ${Math.round(h.hrv)} ${h.hrv>=hb?'on/above':'below'} baseline`);}
+  if(h.rhr!=null){const rb=(tr.rhr&&tr.rhr.avg)?tr.rhr.avg:h.rhr;const s=clamp(50+(1-(h.rhr/rb))*250);parts.push(s);weights.push(.25);factors.push(`Rest HR ${Math.round(h.rhr)}`);}
+  if(h.sleep!=null){const s=clamp((h.sleep/8)*100);parts.push(s);weights.push(.25);factors.push(`Sleep ${h.sleep}h`);}
+  if(!parts.length)return null;
+  const wsum=weights.reduce((a,b)=>a+b,0);
+  const score=Math.round(parts.reduce((a,s,i)=>a+s*weights[i],0)/wsum);
+  const cls=score>=70?"go":score>=45?"watch":"behind";
+  const word=score>=70?"PUSH":score>=45?"STEADY":"RECOVER";
+  const calibrating=!(tr.hrv&&tr.hrv.n>=3);
+  return {score,word,cls,factors,calibrating};
+}
+
 // ---- sub-system statuses ----
 const SUBS={
-  recovery(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c};},
+  recovery(){const r=recoveryRead();if(r)return{cls:r.cls};const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c};},
   sleep(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c};},
   movement(){const h=LIVE.health||{};const st=h.steps;let c=st!=null?(st>=8000?"go":st>=4000?"watch":"behind"):(S.body.trained?"go":"watch");return{cls:c};},
   fuel(){const h=LIVE.health||{};return{cls:(h.kcal!=null||h.protein!=null)?"go":"watch"};},
@@ -184,7 +204,7 @@ function domainStatus(d){const cls=d.subs.map(k=>SUBS[k]().cls);return cls.inclu
 function domWord(c){return c==="behind"?"NEEDS YOU":c==="watch"?"STEADY":"GOOD";}
 function domMetrics(key){
   const h=LIVE.health||{},tr=LIVE.trends||{};
-  if(key==="body"){const sl=h.sleep!=null?h.sleep:S.body.sleep;const parts=[`Sleep <b>${sl?Math.round(sl*10)/10:'-'}h</b>${arr(tr.sleep,true)}`];if(h.hrv!=null)parts.push(`HRV <b>${Math.round(h.hrv)}</b>${arr(tr.hrv,true)}`);if(h.rhr!=null)parts.push(`Rest <b>${Math.round(h.rhr)}</b>${arr(tr.rhr,false)}`);if(h.steps!=null)parts.push(`Steps <b>${Math.round(h.steps/100)/10}k</b>`);return parts.join("&nbsp;&nbsp;&middot;&nbsp;&nbsp;");}
+  if(key==="body"){const r=recoveryRead();const sl=h.sleep!=null?h.sleep:S.body.sleep;const parts=[];if(r)parts.push(`Recovery <b>${r.score}%</b>`);parts.push(`Sleep <b>${sl?Math.round(sl*10)/10:'-'}h</b>${arr(tr.sleep,true)}`);if(h.hrv!=null)parts.push(`HRV <b>${Math.round(h.hrv)}</b>${arr(tr.hrv,true)}`);if(h.rhr!=null)parts.push(`Rest <b>${Math.round(h.rhr)}</b>${arr(tr.rhr,false)}`);return parts.join("&nbsp;&nbsp;&middot;&nbsp;&nbsp;");}
   if(key==="mind")return `Mood <b>${S.mind.mood}/5</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Focus <b>${S.focus.sessions}/${S.focus.goal}</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Read <b>${S.reading.minutes}m</b>${arr(localTrend('reading'),true)}`;
   if(key==="school"){const cs=LIVE.courses||[];const up=schoolAll().filter(x=>!x.done).length;const scored=cs.filter(c=>c.score!=null);const avg=scored.length?Math.round(scored.reduce((a,c)=>a+c.score,0)/scored.length):null;return `${up} due&nbsp;&nbsp;&middot;&nbsp;&nbsp;${cs.length} classes${avg!=null?`&nbsp;&nbsp;&middot;&nbsp;&nbsp;avg <b>${avg}%</b>`:''}`;}
   if(key==="work"){const ow=S.work.filter(x=>!x.done).length;const mv=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;return `<b>${ow}</b> open&nbsp;&nbsp;&middot;&nbsp;&nbsp;${S.create.length} projects&nbsp;&nbsp;&middot;&nbsp;&nbsp;${mv} in motion`;}
@@ -192,6 +212,7 @@ function domMetrics(key){
   return "";
 }
 function domRead(key){
+  if(key==="body"){const r=recoveryRead();if(r){return r.word==="PUSH"?"Recovered and ready - green light to push today.":r.word==="STEADY"?"Holding steady - train, but keep it controlled.":"Running low - recover today and protect sleep.";}}
   const c=domainStatus(DOMAINS.find(d=>d.key===key));
   const R={
     body:{go:"Recovered and ready - green light to push.",watch:"Holding steady. Train, but keep it controlled.",behind:"Running low. Protect sleep before you push hard."},
@@ -225,9 +246,9 @@ function coachBtn(area,label){return `<button class="coachbtn" onclick="coach('$
 function coachBox(area){const t=COACH[area];if(!t)return'';return `<div class="coachbox">${esc(t)}</div>`;}
 
 // ---- sub sections ----
-function recoverySection(){const b=S.body,h=LIVE.health,tr=LIVE.trends||{};
+function recoverySection(){const b=S.body,h=LIVE.health,tr=LIVE.trends||{};const rec=recoveryRead();const recCard=rec?`<div style="text-align:center;padding:2px 0 16px;border-bottom:1px solid var(--line);margin-bottom:15px;"><div class="disp" style="font-size:56px;color:var(--${rec.cls});line-height:1;">${rec.score}<span class="lbl" style="font-size:13px;color:var(--dim);"> %</span></div><div class="astate ${rec.cls}" style="font-size:11px;margin-top:8px;letter-spacing:.18em;">${rec.word} &middot; RECOVERY</div><div class="statline" style="text-align:center;margin-top:9px;">${rec.factors.join(' &middot; ')}${rec.calibrating?'<br>baseline still calibrating - sharper every day':''}</div></div>`:'';
   const live=h?`<div class="mgrid">${metric("Sleep",h.sleep,"h",tr.sleep,true)}${metric("HRV",h.hrv,"ms",tr.hrv,true)}${metric("Rest HR",h.rhr,"",tr.rhr,false)}</div>${tr.hrv&&tr.hrv.n>1?`<div class="lbl" style="margin-top:14px;">HRV &middot; last ${tr.hrv.n} days</div>${spark((LIVE.history||[]).map(x=>x.hrv),'ai')}`:''}<div class="statline">${h.at?'Updated '+new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):''}</div>`:`<div class="statline">No live recovery data yet - your morning Shortcut fills this.</div>`;
-  return `<div class="card"><div class="subhead">Recovery</div>${live}
+  return `<div class="card"><div class="subhead">Recovery</div>${recCard}${live}
     <div class="item" style="margin-top:13px;"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained today</span></div>
     ${h?'':`<div class="slabel" style="margin-top:10px;"><span>Sleep (manual)</span><span class="v" id="slv">${b.sleep} h</span></div><input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">`}
     ${coachBtn("recovery","Get my recovery call")}${coachBox("recovery")}</div>`;
@@ -321,7 +342,9 @@ function healthLine(){const h=LIVE.health,tr=LIVE.trends||{};if(!h)return "no li
 function snapshot(){
   const courses=(LIVE.courses||[]).map(c=>c.name+(c.score!=null?` ${Math.round(c.score)}%`:'')).join(", ")||"none loaded";
   const sch=schoolAll().filter(x=>!x.done).map(x=>x.t+(x.due?` [due ${x.due}]`:"")).join(", ")||"none";
-  return `Health (live, Apple Health): ${healthLine()}.
+  const r=recoveryRead();
+  return `Recovery score (computed from your data): ${r?r.score+"% - "+r.word+" ("+r.factors.join(", ")+")":"calibrating, need a few more days"}.
+Health (live, Apple Health): ${healthLine()}.
 Trained today: ${S.body.trained}. Water: ${S.body.water} cups.
 Classes & grades: ${courses}. Open school work: ${sch}.
 Focus: ${S.focus.sessions}/${S.focus.goal} sessions, one thing "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.

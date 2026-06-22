@@ -1,6 +1,9 @@
-// Overseer — Health pipe v2. Lives at /api/health.
-// POST (from Shortcut): appends a snapshot to a rolling history (one per day).
-// GET (from hub): returns latest + history + computed trends.
+// Overseer - Health pipe v3. Lives at /api/health.
+// POST (from Shortcut): accepts ANY numeric health fields you send (hrv, rhr, sleep,
+//   steps, energy, kcal, protein, carbs, vo2max, hrr, respiratory, spo2, exercise,
+//   stand, walkinghr, ... anything). Stores a rolling daily history.
+// GET (from hub): returns latest + history + trends for every metric seen.
+// Everything you send is fed to the AI even if the screen only shows the headline ones.
 
 async function kv(cmd) {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -29,6 +32,13 @@ function trend(hist, key) {
   const pct = avg ? Math.round(((latest - avg) / avg) * 100) : null;
   return { latest, avg: Math.round(avg * 10) / 10, pct, n: vals.length };
 }
+function allTrends(hist) {
+  const keys = new Set();
+  hist.forEach((h) => Object.keys(h).forEach((k) => { if (k !== "at") keys.add(k); }));
+  const out = {};
+  keys.forEach((k) => { out[k] = trend(hist, k); });
+  return out;
+}
 
 export default async function handler(req, res) {
   const HIST = "overseer:health:hist";
@@ -39,29 +49,21 @@ export default async function handler(req, res) {
         return res.status(401).json({ ok: false, error: "bad secret" });
       }
       const b = req.body || {};
-      const entry = {
-        sleep: num(b.sleep), hrv: num(b.hrv), rhr: num(b.rhr),
-        steps: num(b.steps), energy: num(b.energy),
-        kcal: num(b.kcal), protein: num(b.protein), carbs: num(b.carbs),
-        at: new Date().toISOString(),
-      };
+      const entry = { at: new Date().toISOString() };
+      for (const k in b) { const n = num(b[k]); if (n != null) entry[k] = n; }
       let hist = [];
       try { const raw = await kv(["GET", HIST]); if (raw) hist = JSON.parse(raw); } catch (e) {}
       const day = entry.at.slice(0, 10);
-      if (hist[0] && hist[0].at && hist[0].at.slice(0, 10) === day) hist[0] = entry;
+      if (hist[0] && hist[0].at && hist[0].at.slice(0, 10) === day) hist[0] = { ...hist[0], ...entry };
       else hist.unshift(entry);
-      hist = hist.slice(0, 60);
+      hist = hist.slice(0, 90);
       await kv(["SET", HIST, JSON.stringify(hist)]);
       return res.status(200).json({ ok: true, data: entry });
     }
     if (req.method === "GET") {
       let hist = [];
       try { const raw = await kv(["GET", HIST]); if (raw) hist = JSON.parse(raw); } catch (e) {}
-      const trends = {
-        hrv: trend(hist, "hrv"), rhr: trend(hist, "rhr"), sleep: trend(hist, "sleep"),
-        steps: trend(hist, "steps"), kcal: trend(hist, "kcal"), protein: trend(hist, "protein"),
-      };
-      return res.status(200).json({ ok: true, data: hist[0] || null, history: hist, trends });
+      return res.status(200).json({ ok: true, data: hist[0] || null, history: hist, trends: allTrends(hist) });
     }
     return res.status(405).json({ ok: false, error: "GET or POST only" });
   } catch (e) {

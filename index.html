@@ -14,45 +14,40 @@
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--sans);}
-  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;background:radial-gradient(120% 60% at 50% -8%, rgba(82,199,255,.09), transparent 60%), var(--bg);}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;background:radial-gradient(130% 50% at 50% -6%, rgba(82,199,255,.10), transparent 58%), var(--bg);}
   .scroll{flex:1;overflow-y:auto;padding:0 16px 100px;}
-  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 8px;}
-  .wordmark{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.38em;color:var(--ai);text-transform:uppercase;}
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 4px;}
+  .wordmark{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.4em;color:var(--ai);text-transform:uppercase;}
   .clock{font-family:var(--mono);font-size:11px;color:var(--dim);}
   .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);}
-  .core{display:flex;flex-direction:column;align-items:center;padding:14px 0 8px;text-align:center;}
-  .coremeta{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;}
-  .ringwrap{position:relative;width:188px;height:188px;}
-  .ringwrap .glow{position:absolute;inset:18px;border-radius:50%;filter:blur(26px);opacity:.5;z-index:0;}
-  .ringwrap svg{position:relative;z-index:1;}
-  .corecenter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;}
-  .corepct{font-size:46px;font-weight:700;line-height:1;letter-spacing:-.02em;}
-  .coreword{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.16em;margin-top:6px;}
-  .callline{font-size:16px;font-weight:500;line-height:1.4;max-width:300px;margin:16px auto 0;color:#dfe3ea;}
-  .brief{margin-top:14px;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line2);background:rgba(82,199,255,.06);color:var(--ai);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:9px 16px;border-radius:999px;cursor:pointer;}
-  .ringprog.anim{animation:draw 1.05s cubic-bezier(.4,0,.2,1) forwards;}
-  @keyframes draw{from{stroke-dashoffset:var(--circ);}to{stroke-dashoffset:var(--off);}}
-  .rg-go{stroke:var(--go);} .rg-watch{stroke:var(--watch);} .rg-behind{stroke:var(--behind);} .rg-ai{stroke:var(--ai);}
-  .glow-go{background:var(--go);} .glow-watch{background:var(--watch);} .glow-behind{background:var(--behind);} .glow-ai{background:var(--ai);}
-  .gridhead{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 12px;}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
-  .acard{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:15px 14px 14px;cursor:pointer;text-align:left;color:var(--txt);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:8px;transition:border-color .15s,transform .1s;}
-  .acard:active{transform:scale(.98);}
-  .acard.behind{border-color:rgba(255,107,138,.32);}
-  .acard-top{width:100%;display:flex;align-items:center;justify-content:space-between;}
-  .acard-top .alabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
-  .mini-center{font-size:15px;font-weight:700;letter-spacing:-.01em;}
-  .astate{font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
-  .astate.go{color:var(--go);} .astate.watch{color:var(--watch);} .astate.behind{color:var(--behind);}
-  .dot{width:7px;height:7px;border-radius:50%;}
-  .dot.go{background:var(--go);} .dot.watch{background:var(--watch);} .dot.behind{background:var(--behind);}
-  .acard.behind .dot{animation:pulse 1.7s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
-  .reviewbtn{margin-top:14px;width:100%;background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:13px;border-radius:14px;cursor:pointer;}
+  .hero{padding:20px 2px 8px;border-bottom:1px solid var(--line);margin-bottom:18px;}
+  .heroeyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ai);}
+  .herocall{font-size:23px;font-weight:600;line-height:1.34;letter-spacing:-.01em;margin:13px 0 2px;color:#eef1f5;}
+  .heroactions{display:flex;gap:9px;align-items:center;margin-top:16px;flex-wrap:wrap;}
+  .brief{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--ai-dim);background:rgba(82,199,255,.08);color:var(--ai);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:10px 15px;border-radius:999px;cursor:pointer;}
+  .needs{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--muted);padding:6px 0;}
+  .needs.warn{color:var(--behind);}
+  .sectlabel{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin:4px 2px 12px;display:flex;justify-content:space-between;}
+  .band{display:flex;align-items:stretch;width:100%;text-align:left;background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;margin-bottom:12px;cursor:pointer;color:var(--txt);overflow:hidden;transition:border-color .15s,transform .08s;}
+  .band:active{transform:scale(.99);}
+  .band.behind{border-color:rgba(255,107,138,.30);}
+  .spine{width:4px;flex-shrink:0;background:var(--dim);}
+  .spine.go{background:var(--go);} .spine.watch{background:var(--watch);} .spine.behind{background:var(--behind);}
+  .bandbody{flex:1;padding:16px 6px 16px 16px;min-width:0;}
+  .bandtop{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
+  .domain{font-size:21px;font-weight:700;letter-spacing:-.02em;}
+  .bword{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;flex-shrink:0;}
+  .bword.go{color:var(--go);} .bword.watch{color:var(--watch);} .bword.behind{color:var(--behind);}
+  .bmetrics{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5;}
+  .bmetrics b{color:var(--txt);font-weight:500;}
+  .bmetrics .up{color:var(--go);} .bmetrics .down{color:var(--behind);}
+  .bread{font-size:13.5px;color:#cdd2da;margin-top:10px;line-height:1.45;}
+  .chev{display:flex;align-items:center;padding:0 15px;color:var(--dim);font-size:17px;flex-shrink:0;}
+  .reviewbtn{margin-top:6px;width:100%;background:var(--card);border:1px solid var(--line);color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:14px;border-radius:14px;cursor:pointer;}
   .back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;padding:16px 0 4px;}
-  .dtitle{font-size:27px;font-weight:700;letter-spacing:-.02em;margin:4px 0 16px;}
+  .dtitle{font-size:28px;font-weight:700;letter-spacing:-.02em;margin:4px 0 16px;}
   .card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:13px;}
-  .card .lbl{margin-bottom:13px;}
+  .subhead{font-size:17px;font-weight:700;margin:0 0 13px;letter-spacing:-.01em;}
   .item{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--line);border-radius:13px;margin-bottom:8px;background:var(--bg2);}
   .check{width:22px;height:22px;border:1px solid var(--line2);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;color:var(--go);font-size:13px;}
   .check.on{background:rgba(77,219,154,.16);border-color:var(--go);}
@@ -66,28 +61,34 @@
   button.add{background:var(--ai);color:#04222f;border:0;border-radius:11px;font-weight:700;font-family:var(--mono);font-size:13px;padding:0 16px;height:46px;cursor:pointer;flex-shrink:0;}
   button.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt);border-radius:11px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;padding:12px;cursor:pointer;width:100%;text-transform:uppercase;}
   button.solid{background:var(--ai);color:#04222f;border:0;border-radius:11px;font-weight:700;font-family:var(--mono);font-size:13px;padding:14px;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:.05em;}
-  .coachbtn{width:100%;background:rgba(82,199,255,.08);border:1px solid var(--ai-dim);color:var(--ai);font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:14px;border-radius:13px;cursor:pointer;margin-bottom:13px;}
+  .coachbtn{width:100%;background:rgba(82,199,255,.08);border:1px solid var(--ai-dim);color:var(--ai);font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:13px;border-radius:12px;cursor:pointer;margin-top:13px;}
   .coachbtn:active{background:rgba(82,199,255,.16);}
-  .coachbox{white-space:pre-wrap;line-height:1.6;font-size:14px;background:var(--bg);border:1px solid var(--line);border-left:2px solid var(--ai);border-radius:12px;padding:16px;margin-bottom:13px;}
+  .coachbox{white-space:pre-wrap;line-height:1.6;font-size:14px;background:var(--bg);border:1px solid var(--line);border-left:2px solid var(--ai);border-radius:12px;padding:16px;margin-top:11px;}
+  .domcoach{width:100%;background:var(--ai);color:#04222f;border:0;font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:14px;border-radius:13px;cursor:pointer;margin-bottom:14px;}
   .slabel{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px;}
   .slabel .v{font-family:var(--mono);color:var(--txt);}
   .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:7px 12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;}
   .pill.go{color:var(--go);border-color:rgba(77,219,154,.4);} .pill.watch{color:var(--watch);border-color:rgba(245,181,61,.4);}
-  .empty{border:1px dashed var(--line2);border-radius:13px;padding:20px;text-align:center;color:var(--dim);font-size:13px;}
+  .empty{border:1px dashed var(--line2);border-radius:13px;padding:18px;text-align:center;color:var(--dim);font-size:13px;}
   .statline{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:10px;line-height:1.6;}
   .disp{font-weight:700;letter-spacing:-.02em;}
   .mgrid{display:flex;gap:20px;flex-wrap:wrap;}
-  .metric{display:flex;flex-direction:column;gap:3px;min-width:72px;}
+  .metric{display:flex;flex-direction:column;gap:3px;min-width:70px;}
   .trend{font-family:var(--mono);font-size:10px;letter-spacing:.03em;margin-top:2px;}
   .trend.go{color:var(--go);} .trend.behind{color:var(--behind);} .trend.flat{color:var(--dim);}
+  .astate.go{color:var(--go);} .astate.watch{color:var(--watch);} .astate.behind{color:var(--behind);}
+  .astate{font-family:var(--mono);font-size:9px;letter-spacing:.1em;}
+  .dot{width:7px;height:7px;border-radius:50%;}
+  .dot.go{background:var(--go);} .dot.watch{background:var(--watch);} .dot.behind{background:var(--behind);}
   .voicebtn{flex-shrink:0;width:46px;height:46px;border-radius:11px;border:1px solid var(--line2);background:transparent;color:var(--ai);font-size:18px;cursor:pointer;}
   .vtoggle{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:12px;cursor:pointer;}
   .vtoggle.on{color:var(--ai);}
-  .nav{position:sticky;bottom:0;display:flex;background:rgba(10,11,14,.86);backdrop-filter:blur(16px);border-top:1px solid var(--line);}
+  .spark svg{display:block;}
+  .nav{position:sticky;bottom:0;display:flex;background:rgba(10,11,14,.88);backdrop-filter:blur(16px);border-top:1px solid var(--line);}
   .nav button{flex:1;background:none;border:0;color:var(--dim);padding:13px 0 17px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;}
   .nav button.on{color:var(--ai);}
   .nav .ico{font-size:17px;line-height:1;}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;}.ringprog.anim{stroke-dashoffset:var(--off)!important;}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
 </style>
 </head>
 <body>
@@ -118,6 +119,7 @@ function fresh(){ return {
   care:{day:today(), am:[{l:"LRP cleanser",d:false},{l:"Moisturizer",d:false},{l:"Sunscreen",d:false}], pm:[{l:"Cleanse",d:false},{l:"Differin / treat",d:false},{l:"Moisturize",d:false}], dates:[]},
   reading:{book:"", minutes:0},
   wins:[],
+  local:[],
   call:"", briefing:"", review:""
 };}
 function load(){
@@ -138,199 +140,235 @@ function load(){
   return fresh();
 }
 let S=load();
-function save(){ localStorage.setItem("overseer-v5", JSON.stringify(S)); }
+function recordLocal(){if(!S.local)S.local=[];const e={date:today(),focus:S.focus.sessions,mood:S.mind.mood,reading:S.reading.minutes,water:S.body.water,trained:S.body.trained?1:0,care:(S.care.am.every(x=>x.d)&&S.care.pm.every(x=>x.d))?1:0};if(S.local[0]&&S.local[0].date===today())S.local[0]=e;else S.local.unshift(e);S.local=S.local.slice(0,90);}
+function localSeries(key){return (S.local||[]).map(e=>e[key]);}
+function localTrend(key){const vals=(S.local||[]).map(e=>e[key]).filter(v=>v!=null&&!isNaN(v));if(vals.length<2)return null;const latest=vals[0];const base=vals.slice(1,8);const avg=base.reduce((a,b)=>a+b,0)/base.length;const pct=avg?Math.round(((latest-avg)/avg)*100):null;return{latest,avg:Math.round(avg*10)/10,pct,n:vals.length};}
+function save(){ recordLocal(); localStorage.setItem("overseer-v5", JSON.stringify(S)); }
 
 function streak(dates){const set=new Set(dates||[]);let n=0,d=new Date();const f=x=>x.toISOString().slice(0,10);if(!set.has(f(d)))d.setDate(d.getDate()-1);while(set.has(f(d))){n++;d.setDate(d.getDate()-1);}return n;}
 function daysUntil(due){if(!due)return 99;return Math.ceil((new Date(due+"T00:00:00")-new Date(today()+"T00:00:00"))/86400000);}
 function daysAgo(date){return Math.abs(Math.ceil((new Date(today()+"T00:00:00")-new Date((date||today())+"T00:00:00"))/86400000));}
 function schoolAll(){return (LIVE.canvas||[]).map(c=>({t:c.title,due:c.due,done:false,canvas:true})).concat(S.school);}
 
-const AREAS=[
-  {key:"body",label:"Body",status(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;const hv=h.hrv!=null?h.hrv:S.body.hrv;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c,word:{go:"RECOVERED",watch:"STEADY",behind:"LOW"}[c],val:hv?String(Math.round(hv)):sl+"h",fill:Math.min(sl/9,1)};}},
-  {key:"sleep",label:"Sleep",status(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c,word:{go:"RESTED",watch:"SHORT",behind:"LOW"}[c],val:sl+"h",fill:Math.min(sl/9,1)};}},
-  {key:"fuel",label:"Fuel",status(){const h=LIVE.health||{};const has=h.kcal!=null||h.protein!=null;return{cls:has?"go":"watch",word:has?"FUELED":"LOG IT",val:h.protein!=null?Math.round(h.protein)+"g":(h.kcal!=null?Math.round(h.kcal):"-"),fill:has?.7:.3};}},
-  {key:"focus",label:"Focus",status(){const s=S.focus.sessions,g=S.focus.goal;let c=s>=g?"go":s>=1?"watch":"behind";return{cls:c,word:{go:"DIALED",watch:"WARMING",behind:"IDLE"}[c],val:s+"/"+g,fill:Math.min(s/g,1)};}},
-  {key:"school",label:"School",status(){const o=schoolAll().filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;const so=o.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;const low=(LIVE.courses||[]).some(c=>c.score!=null&&c.score<80);let c=ov>0||low?"behind":so>0?"watch":"go";return{cls:c,word:{go:"ON TOP",watch:"DUE SOON",behind:low&&ov===0?"GRADES":"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):(low?1:0.15)};}},
-  {key:"mind",label:"Mind",status(){const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);let c=n>=2?"go":n===1?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"OK",behind:"UNSET"}[c],val:S.mind.mood+"/5",fill:S.mind.mood/5};}},
-  {key:"create",label:"Create",status(){const a=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;const p=S.create.filter(c=>c.stage==="Posted").length;let c=a>0?"go":S.create.length>0?"watch":"behind";return{cls:c,word:{go:"SHIPPING",watch:"IN MOTION",behind:"STALLED"}[c],val:S.create.length+"",fill:S.create.length?(p+a)/S.create.length:0};}},
-  {key:"reading",label:"Reading",status(){const m=S.reading.minutes;let c=m>0?"go":"behind";return{cls:c,word:{go:"READ",behind:"NOT YET"}[c],val:m+"m",fill:Math.min(m/30,1)};}},
-  {key:"work",label:"Work",status(){const o=S.work.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;let c=ov>0?"behind":o.length?"watch":"go";return{cls:c,word:{go:"ON TRACK",watch:"ACTIVE",behind:"OVERDUE"}[c],val:o.length+"",fill:o.length?Math.min(o.length/6,1):0};}},
-  {key:"care",label:"Care",status(){const am=S.care.am.every(x=>x.d),pm=S.care.pm.every(x=>x.d);let c=(am&&pm)?"go":(am||pm)?"watch":"behind";return{cls:c,word:{go:"KEPT",watch:"HALF",behind:"SKIPPED"}[c],val:streak(S.care.dates)+"d",fill:(S.care.am.filter(x=>x.d).length+S.care.pm.filter(x=>x.d).length)/(S.care.am.length+S.care.pm.length)};}},
-  {key:"capture",label:"Inbox",status(){const n=S.capture.length;let c=n===0?"go":n<=4?"watch":"behind";return{cls:c,word:{go:"CLEAR",watch:"TO SORT",behind:"PILING UP"}[c],val:n+"",fill:n?Math.min(n/8,1):0};}},
-  {key:"wins",label:"Wins",status(){const wk=S.wins.filter(w=>daysAgo(w.date)<=7).length;let c=wk>0?"go":"behind";return{cls:c,word:{go:"LOGGED",behind:"NONE YET"}[c],val:wk+"",fill:Math.min(wk/5,1)};}},
-  {key:"money",label:"Money",status(){const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return{cls:"go",word:"STEADY",val:"$"+m.toFixed(0),fill:.6};}},
-];
-
-function ring(pct,cls,size,sw,centerHtml,anim){
-  const r=(size-sw)/2, cx=size/2, circ=2*Math.PI*r, off=circ*(1-Math.max(0,Math.min(1,pct)));
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="${sw}"/>
-    <circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke-width="${sw}" stroke-linecap="round" class="ringprog rg-${cls} ${anim?'anim':''}" style="--circ:${circ};--off:${off};stroke-dasharray:${circ};stroke-dashoffset:${anim?circ:off};" transform="rotate(-90 ${cx} ${cx})"/>
-  </svg>${centerHtml?`<div class="corecenter">${centerHtml}</div>`:""}`;
-}
-function spark(vals,cls){vals=(vals||[]).filter(v=>v!=null&&!isNaN(v)).slice(0,14).reverse();if(vals.length<2)return'';const w=160,h=36,pad=3;const mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1;const pts=vals.map((v,i)=>{const x=pad+i*(w-2*pad)/(vals.length-1);const y=h-pad-((v-mn)/rng)*(h-2*pad);return x.toFixed(1)+','+y.toFixed(1);}).join(' ');return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block;"><polyline points="${pts}" fill="none" stroke="var(--${cls})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;}
+function spark(vals,cls){vals=(vals||[]).filter(v=>v!=null&&!isNaN(v)).slice(0,14).reverse();if(vals.length<2)return'';const w=160,h=36,pad=3;const mn=Math.min(...vals),mx=Math.max(...vals),rng=(mx-mn)||1;const pts=vals.map((v,i)=>{const x=pad+i*(w-2*pad)/(vals.length-1);const y=h-pad-((v-mn)/rng)*(h-2*pad);return x.toFixed(1)+','+y.toFixed(1);}).join(' ');return `<div class="spark"><svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="var(--${cls})" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;}
 function trendChip(t,goodUp){if(!t||t.pct==null)return `<span class="trend flat">- no baseline</span>`;if(t.pct===0)return `<span class="trend flat">flat vs avg</span>`;const up=t.pct>0;const good=goodUp?up:!up;return `<span class="trend ${good?'go':'behind'}">${up?'▲':'▼'}${Math.abs(t.pct)}% vs avg</span>`;}
 function metric(label,v,unit,t,goodUp){return `<div class="metric"><div class="lbl">${label}</div><div class="disp" style="font-size:26px;">${v!=null&&v!==""?Math.round(v*10)/10:'-'}<span class="lbl"> ${unit}</span></div>${trendChip(t,goodUp)}</div>`;}
+function arr(t,goodUp){if(!t||t.pct==null||t.pct===0)return'';const up=t.pct>0;const good=goodUp?up:!up;return `<span class="${good?'up':'down'}">${up?'▲':'▼'}</span>`;}
 
-function overall(){const sc={go:1,watch:.5,behind:0};const arr=AREAS.map(a=>sc[a.status().cls]);const pct=arr.reduce((x,y)=>x+y,0)/arr.length;const cl=AREAS.map(a=>a.status().cls);let cls=cl.includes("behind")?"behind":cl.filter(x=>x==="watch").length>=3?"watch":"go";let word=cls==="behind"?"NEEDS YOU":cls==="watch"?"STEADY":"DIALED IN";return{pct,cls,word};}
+// ---- sub-system statuses ----
+const SUBS={
+  recovery(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c};},
+  sleep(){const h=LIVE.health||{};const sl=parseFloat((h.sleep!=null?h.sleep:S.body.sleep))||0;let c=sl>=7.5?"go":sl>=6?"watch":"behind";return{cls:c};},
+  movement(){const h=LIVE.health||{};const st=h.steps;let c=st!=null?(st>=8000?"go":st>=4000?"watch":"behind"):(S.body.trained?"go":"watch");return{cls:c};},
+  fuel(){const h=LIVE.health||{};return{cls:(h.kcal!=null||h.protein!=null)?"go":"watch"};},
+  hydration(){const w=S.body.water;return{cls:w>=8?"go":w>=4?"watch":"behind"};},
+  mood(){const n=(S.mind.windDown?1:0)+(S.mind.reflection?1:0);return{cls:n>=2?"go":n===1?"watch":"behind"};},
+  focus(){const s=S.focus.sessions,g=S.focus.goal;return{cls:s>=g?"go":s>=1?"watch":"behind"};},
+  reading(){return{cls:S.reading.minutes>0?"go":"behind"};},
+  school(){const o=schoolAll().filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;const so=o.filter(x=>daysUntil(x.due)>=0&&daysUntil(x.due)<=2).length;const low=(LIVE.courses||[]).some(c=>c.score!=null&&c.score<80);return{cls:ov>0||low?"behind":so>0?"watch":"go"};},
+  work(){const o=S.work.filter(x=>!x.done);const ov=o.filter(x=>daysUntil(x.due)<0).length;return{cls:ov>0?"behind":o.length?"watch":"go"};},
+  create(){const a=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;return{cls:a>0?"go":S.create.length>0?"watch":"behind"};},
+  care(){const am=S.care.am.every(x=>x.d),pm=S.care.pm.every(x=>x.d);return{cls:(am&&pm)?"go":(am||pm)?"watch":"behind"};},
+  money(){return{cls:"go"};},
+  wins(){return{cls:S.wins.filter(w=>daysAgo(w.date)<=7).length>0?"go":"behind"};},
+  inbox(){const n=S.capture.length;return{cls:n===0?"go":n<=4?"watch":"behind"};},
+};
+const DOMAINS=[
+  {key:"body",label:"Body",subs:["recovery","sleep","movement","fuel","hydration"]},
+  {key:"mind",label:"Mind",subs:["mood","focus","reading"]},
+  {key:"school",label:"School",subs:["school"]},
+  {key:"work",label:"Work",subs:["work","create"]},
+  {key:"life",label:"Life",subs:["care","money","wins","inbox"]},
+];
+function domainStatus(d){const cls=d.subs.map(k=>SUBS[k]().cls);return cls.includes("behind")?"behind":cls.includes("watch")?"watch":"go";}
+function domWord(c){return c==="behind"?"NEEDS YOU":c==="watch"?"STEADY":"GOOD";}
+function domMetrics(key){
+  const h=LIVE.health||{},tr=LIVE.trends||{};
+  if(key==="body"){const sl=h.sleep!=null?h.sleep:S.body.sleep;const parts=[`Sleep <b>${sl?Math.round(sl*10)/10:'-'}h</b>${arr(tr.sleep,true)}`];if(h.hrv!=null)parts.push(`HRV <b>${Math.round(h.hrv)}</b>${arr(tr.hrv,true)}`);if(h.rhr!=null)parts.push(`Rest <b>${Math.round(h.rhr)}</b>${arr(tr.rhr,false)}`);if(h.steps!=null)parts.push(`Steps <b>${Math.round(h.steps/100)/10}k</b>`);return parts.join("&nbsp;&nbsp;&middot;&nbsp;&nbsp;");}
+  if(key==="mind")return `Mood <b>${S.mind.mood}/5</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Focus <b>${S.focus.sessions}/${S.focus.goal}</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Read <b>${S.reading.minutes}m</b>${arr(localTrend('reading'),true)}`;
+  if(key==="school"){const cs=LIVE.courses||[];const up=schoolAll().filter(x=>!x.done).length;const scored=cs.filter(c=>c.score!=null);const avg=scored.length?Math.round(scored.reduce((a,c)=>a+c.score,0)/scored.length):null;return `${up} due&nbsp;&nbsp;&middot;&nbsp;&nbsp;${cs.length} classes${avg!=null?`&nbsp;&nbsp;&middot;&nbsp;&nbsp;avg <b>${avg}%</b>`:''}`;}
+  if(key==="work"){const ow=S.work.filter(x=>!x.done).length;const mv=S.create.filter(c=>c.stage!=="Idea"&&c.stage!=="Posted").length;return `<b>${ow}</b> open&nbsp;&nbsp;&middot;&nbsp;&nbsp;${S.create.length} projects&nbsp;&nbsp;&middot;&nbsp;&nbsp;${mv} in motion`;}
+  if(key==="life"){const m=S.money.subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return `Care <b>${streak(S.care.dates)}d</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;Inbox <b>${S.capture.length}</b>&nbsp;&nbsp;&middot;&nbsp;&nbsp;$${m.toFixed(0)}/mo`;}
+  return "";
+}
+function domRead(key){
+  const c=domainStatus(DOMAINS.find(d=>d.key===key));
+  const R={
+    body:{go:"Recovered and ready - green light to push.",watch:"Holding steady. Train, but keep it controlled.",behind:"Running low. Protect sleep before you push hard."},
+    mind:{go:"Clear and focused. Ride it.",watch:"A little scattered - pick the one thing.",behind:"Foggy. Reset, log a session, wind down early."},
+    school:{go:"On top of it. Stay a step ahead.",watch:"Something's due soon - get ahead of it tonight.",behind:"A class is slipping or work's overdue. Open the study plan."},
+    work:{go:"Clear runway. Pick your next build.",watch:"Projects in motion - ship the next step.",behind:"Something's overdue. Knock out the oldest first."},
+    life:{go:"Streaks holding, inbox light. Smooth.",watch:"A couple loose ends - tidy them up.",behind:"Streak's at risk or the inbox is piling up."}
+  };
+  return R[key][c];
+}
+
+function watchLine(){const b=DOMAINS.filter(d=>domainStatus(d)==='behind').map(d=>d.label);if(b.length)return {warn:true,t:"Needs you: "+b.join(", ")};const soon=schoolAll().concat(S.work).filter(x=>!x.done&&daysUntil(x.due)>=0&&daysUntil(x.due)<=2);if(soon.length)return {warn:false,t:"Due soon: "+soon.map(x=>x.t).slice(0,2).join(", ")};return {warn:false,t:"All systems steady."};}
+
 function renderHome(){
-  const ov=overall();const call=S.call||"Tap brief me - I'll read every system and call the day.";
-  const cards=AREAS.map(a=>{const st=a.status();return `<button class="acard ${st.cls}" onclick="go('${a.key}')"><div class="acard-top"><span class="alabel">${a.label}</span><span class="dot ${st.cls}"></span></div><div class="ringwrap" style="width:62px;height:62px;">${ring(st.fill,st.cls,62,5,`<div class="mini-center">${esc(st.val)}</div>`,false)}</div><div class="astate ${st.cls}">${st.word}</div></button>`;}).join("");
-  return `<div class="core"><div class="coremeta">System status &middot; ${new Date().toLocaleDateString('en-US',{weekday:'long'})}</div><div class="ringwrap"><div class="glow glow-${ov.cls}"></div>${ring(ov.pct,ov.cls,188,9,`<div class="corepct">${Math.round(ov.pct*100)}</div><div class="coreword astate ${ov.cls}">${ov.word}</div>`,true)}</div><div class="callline">${esc(call)}</div><button class="brief" id="hbrief" onclick="brief()">◈ Brief me</button></div>
-    <div class="gridhead"><span class="lbl">Where you stand</span><span class="lbl">${AREAS.length} systems</span></div>
-    <div class="grid">${cards}</div>
+  const call=S.call||"Tap brief me and I'll read every system, then tell you the one move that matters today.";
+  const w=watchLine();
+  const bands=DOMAINS.map(d=>{const c=domainStatus(d);return `<button class="band ${c}" onclick="go('d-${d.key}')"><span class="spine ${c}"></span><div class="bandbody"><div class="bandtop"><span class="domain">${d.label}</span><span class="bword ${c}">${domWord(c)}</span></div><div class="bmetrics">${domMetrics(d.key)}</div><div class="bread">${esc(domRead(d.key))}</div></div><span class="chev">→</span></button>`;}).join("");
+  return `<div class="hero"><div class="heroeyebrow">Today &middot; ${new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'})}</div>
+    <div class="herocall">${esc(call)}</div>
+    <div class="heroactions"><button class="brief" id="hbrief" onclick="brief()">◈ Brief me</button><span class="needs ${w.warn?'warn':''}">${esc(w.t)}</span></div></div>
+    <div class="sectlabel"><span>Your domains</span><span>5</span></div>
+    ${bands}
     <button class="reviewbtn" onclick="go('review')">↗ Run weekly deep review</button>`;
 }
 
 function persist(){save();render();}
 function addTo(list,obj){S[list].push(obj);persist();}
 function rm(list,i){S[list].splice(i,1);persist();}
-function dhead(title){return `<button class="back" onclick="go('home')">← Command</button><div class="dtitle">${title}</div>`;}
+function dhead(title){return `<button class="back" onclick="go('home')">← Today</button><div class="dtitle">${title}</div>`;}
 function coachBtn(area,label){return `<button class="coachbtn" onclick="coach('${area}')">◈ ${label}</button>`;}
 function coachBox(area){const t=COACH[area];if(!t)return'';return `<div class="coachbox">${esc(t)}</div>`;}
 
-function detail(key){const map={body:bodyView,sleep:sleepView,fuel:fuelView,focus:focusView,mind:mindView,create:createView,reading:readingView,capture:captureView,school:schoolView,work:workView,money:moneyView,care:careView,wins:winsView,overseer:overseerView,review:reviewView};return (map[key]||(()=>dhead("-")+`<div class="empty">Coming soon.</div>`))();}
-
-function bodyView(){const b=S.body,h=LIVE.health,tr=LIVE.trends||{};
-  const live=h?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ Live &middot; Apple Health</div><div class="mgrid">${metric("Sleep",h.sleep,"h",tr.sleep,true)}${metric("HRV",h.hrv,"ms",tr.hrv,true)}${metric("Rest HR",h.rhr,"",tr.rhr,false)}</div>${tr.hrv&&tr.hrv.n>1?`<div class="lbl" style="margin-top:14px;">HRV &middot; last ${tr.hrv.n} days</div>${spark((LIVE.history||[]).map(x=>x.hrv),'ai')}`:''}<div class="statline">${h.at?'Updated '+new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):''}</div></div>`:'';
-  return dhead("Body")+live+coachBtn("body","Get my recovery call")+coachBox("body")+`
-   <div class="card"><div class="lbl">Done today</div>
-    <div class="item"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained (logged in Hevy)</span></div>
-    <div class="item"><div class="check ${b.fuel?'on':''}" onclick="S.body.fuel=!S.body.fuel;persist();">${b.fuel?'✓':''}</div><span class="${b.fuel?'strike':''}">Ate enough to recover</span></div>
-    <div class="slabel" style="margin-top:6px;"><span>Water</span><span class="v">${b.water} cups</span></div>
-    <div class="rowflex"><button class="ghost" onclick="S.body.water=Math.max(0,S.body.water-1);persist();">-</button><button class="ghost" onclick="S.body.water++;persist();">+ cup</button></div>
-    ${h?'':`<div class="slabel" style="margin-top:14px;"><span>Sleep (manual)</span><span class="v" id="slv">${b.sleep} h</span></div><input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">`}
-   </div>`;
+// ---- sub sections ----
+function recoverySection(){const b=S.body,h=LIVE.health,tr=LIVE.trends||{};
+  const live=h?`<div class="mgrid">${metric("Sleep",h.sleep,"h",tr.sleep,true)}${metric("HRV",h.hrv,"ms",tr.hrv,true)}${metric("Rest HR",h.rhr,"",tr.rhr,false)}</div>${tr.hrv&&tr.hrv.n>1?`<div class="lbl" style="margin-top:14px;">HRV &middot; last ${tr.hrv.n} days</div>${spark((LIVE.history||[]).map(x=>x.hrv),'ai')}`:''}<div class="statline">${h.at?'Updated '+new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):''}</div>`:`<div class="statline">No live recovery data yet - your morning Shortcut fills this.</div>`;
+  return `<div class="card"><div class="subhead">Recovery</div>${live}
+    <div class="item" style="margin-top:13px;"><div class="check ${b.trained?'on':''}" onclick="S.body.trained=!S.body.trained;persist();">${b.trained?'✓':''}</div><span class="${b.trained?'strike':''}">Trained today</span></div>
+    ${h?'':`<div class="slabel" style="margin-top:10px;"><span>Sleep (manual)</span><span class="v" id="slv">${b.sleep} h</span></div><input type="range" min="3" max="11" step="0.5" value="${b.sleep}" oninput="S.body.sleep=this.value;$('#slv').textContent=this.value+' h';save();">`}
+    ${coachBtn("recovery","Get my recovery call")}${coachBox("recovery")}</div>`;
 }
-function sleepView(){const h=LIVE.health,tr=LIVE.trends||{};const sl=h&&h.sleep!=null?h.sleep:null;
-  const live=sl!=null?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ Last night &middot; Apple Health</div><div class="disp" style="font-size:42px;">${sl}<span class="lbl"> hours</span></div><div style="margin-top:6px;">${trendChip(tr.sleep,true)}</div>${tr.sleep&&tr.sleep.n>1?`<div class="lbl" style="margin-top:14px;">Sleep &middot; last ${tr.sleep.n} days</div>${spark((LIVE.history||[]).map(x=>x.sleep),'ai')}`:''}</div>`:`<div class="card"><div class="statline">No sleep data yet. Add AutoSleep's sleep read to your Push To Overseer shortcut and it lands here automatically.</div></div>`;
-  return dhead("Sleep")+live+coachBtn("sleep","How do I sleep better")+coachBox("sleep");
+function sleepSection(){const h=LIVE.health,tr=LIVE.trends||{};const sl=h&&h.sleep!=null?h.sleep:null;
+  const body=sl!=null?`<div class="disp" style="font-size:38px;">${sl}<span class="lbl"> hours</span></div><div style="margin-top:6px;">${trendChip(tr.sleep,true)}</div>${tr.sleep&&tr.sleep.n>1?`<div class="lbl" style="margin-top:14px;">Sleep &middot; last ${tr.sleep.n} days</div>${spark((LIVE.history||[]).map(x=>x.sleep),'ai')}`:''}`:`<div class="statline">No sleep data yet. Add AutoSleep's sleep read to your shortcut.</div>`;
+  return `<div class="card"><div class="subhead">Sleep</div>${body}${coachBtn("sleep","How do I sleep better")}${coachBox("sleep")}</div>`;
 }
-function fuelView(){const h=LIVE.health||{};const has=h.kcal!=null||h.protein!=null;const tr=LIVE.trends||{};
-  const live=has?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ Today's fuel &middot; Cronometer</div><div class="mgrid">${metric("Energy",h.kcal,"kcal",tr.kcal,true)}${metric("Protein",h.protein,"g",tr.protein,true)}${metric("Carbs",h.carbs,"g",null,true)}</div><div class="statline">Fuel for training and recovery - the goal is eating enough, not less.</div></div>`:`<div class="card"><div class="statline">Turn on Cronometer's Apple Health sync, then add the nutrition reads to your shortcut - your fuel shows here. Treated as fuel, never a diet.</div></div>`;
-  return dhead("Fuel")+live+coachBtn("fuel","Am I fueling enough")+coachBox("fuel");
+function movementSection(){const h=LIVE.health||{},tr=LIVE.trends||{};const has=h.steps!=null||h.energy!=null;
+  const live=has?`<div class="mgrid">${metric("Steps",h.steps,"",tr.steps,true)}${metric("Active",h.energy,"kcal",tr.energy,true)}${h.exercise!=null?metric("Exercise",h.exercise,"min",tr.exercise,true):''}</div>${tr.steps&&tr.steps.n>1?`<div class="lbl" style="margin-top:14px;">Steps &middot; last ${tr.steps.n} days</div>${spark((LIVE.history||[]).map(x=>x.steps),'ai')}`:''}`:`<div class="statline">Add steps + active energy reads to your shortcut and movement shows here.</div>`;
+  return `<div class="card"><div class="subhead">Movement</div>${live}${coachBtn("movement","How's my movement")}${coachBox("movement")}</div>`;
 }
-function focusView(){const f=S.focus;return dhead("Focus")+coachBtn("focus","Beat my procrastination now")+coachBox("focus")+`
-  <div class="card"><div class="lbl">The one thing today</div><input value="${esc(f.oneThing)}" placeholder="If only one thing gets done..." oninput="S.focus.oneThing=this.value;save();"></div>
-  <div class="card"><div class="lbl">Deep work sessions</div><div style="display:flex;align-items:baseline;gap:8px;"><span class="disp" style="font-size:42px;">${f.sessions}</span><span class="lbl">/ ${f.goal} today</span></div>
-    <div class="rowflex" style="margin-top:12px;"><button class="ghost" onclick="S.focus.sessions=Math.max(0,S.focus.sessions-1);persist();">-</button><button class="solid" onclick="S.focus.sessions++;persist();">+ logged a session</button></div>
-    <div class="slabel" style="margin-top:16px;"><span>Distractions caught</span><span class="v">${f.distractions}</span></div><button class="ghost" onclick="S.focus.distractions++;persist();">+ caught myself drifting</button></div>`;
+function fuelSection(){const h=LIVE.health||{},tr=LIVE.trends||{};const has=h.kcal!=null||h.protein!=null;
+  const live=has?`<div class="mgrid">${metric("Energy",h.kcal,"kcal",tr.kcal,true)}${metric("Protein",h.protein,"g",tr.protein,true)}${metric("Carbs",h.carbs,"g",null,true)}</div><div class="statline">Fuel for training and recovery - the goal is eating enough, not less.</div>`:`<div class="statline">Turn on Cronometer's Apple Health sync, then add the nutrition reads. Treated as fuel, never a diet.</div>`;
+  return `<div class="card"><div class="subhead">Fuel</div>${live}${coachBtn("fuel","Am I fueling enough")}${coachBox("fuel")}</div>`;
 }
-function mindView(){const m=S.mind;return dhead("Mind")+coachBtn("mind","Talk me through today")+coachBox("mind")+`
-  <div class="card"><div class="lbl">Wind-down</div><div class="item"><div class="check ${m.windDown?'on':''}" onclick="S.mind.windDown=!S.mind.windDown;persist();">${m.windDown?'✓':''}</div><span class="${m.windDown?'strike':''}">Screens down, ready to sleep</span></div>
-    <div class="slabel" style="margin-top:8px;"><span>Mood / energy</span><span class="v">${m.mood}/5</span></div><input type="range" min="1" max="5" step="1" value="${m.mood}" oninput="S.mind.mood=+this.value;save();render();"></div>
-  <div class="card"><div class="lbl">One line on today</div><textarea rows="3" placeholder="One honest sentence." oninput="S.mind.reflection=this.value;save();">${esc(m.reflection)}</textarea></div>`;
+function hydrationSection(){const w=S.body.water,g=8,t=localTrend('water');
+  return `<div class="card"><div class="subhead">Hydration</div><div class="disp" style="font-size:34px;">${w}<span class="lbl"> / ${g} cups</span></div><div style="margin-top:6px;">${trendChip(t,true)}</div>
+    <div class="rowflex" style="margin-top:12px;"><button class="ghost" onclick="S.body.water=Math.max(0,S.body.water-1);persist();">-</button><button class="solid" onclick="S.body.water++;persist();">+ cup</button></div>
+    ${t&&t.n>1?`<div class="lbl" style="margin-top:14px;">Cups &middot; last ${t.n} days</div>${spark(localSeries('water'),'ai')}`:''}${coachBtn("hydration","Am I hydrating enough")}${coachBox("hydration")}</div>`;
+}
+function moodSection(){const m=S.mind;const t=localTrend('mood');
+  return `<div class="card"><div class="subhead">Headspace</div>
+    <div class="slabel"><span>Mood / energy</span><span class="v">${m.mood}/5</span></div><input type="range" min="1" max="5" step="1" value="${m.mood}" oninput="S.mind.mood=+this.value;save();render();">
+    <div class="item" style="margin-top:12px;"><div class="check ${m.windDown?'on':''}" onclick="S.mind.windDown=!S.mind.windDown;persist();">${m.windDown?'✓':''}</div><span class="${m.windDown?'strike':''}">Wound down, screens off</span></div>
+    <div class="lbl" style="margin-top:10px;margin-bottom:8px;">One honest line on today</div><textarea rows="2" placeholder="One sentence." oninput="S.mind.reflection=this.value;save();">${esc(m.reflection)}</textarea>
+    ${t&&t.n>1?`<div class="lbl" style="margin-top:14px;">Mood &middot; last ${t.n} days</div>${spark(localSeries('mood'),'ai')}`:''}${coachBtn("mood","Talk me through today")}${coachBox("mood")}</div>`;
+}
+function focusSection(){const f=S.focus;const t=localTrend('focus');
+  return `<div class="card"><div class="subhead">Focus</div>
+    <div class="lbl" style="margin-bottom:8px;">The one thing today</div><input value="${esc(f.oneThing)}" placeholder="If only one thing gets done..." oninput="S.focus.oneThing=this.value;save();">
+    <div style="display:flex;align-items:baseline;gap:8px;margin-top:14px;"><span class="disp" style="font-size:34px;">${f.sessions}</span><span class="lbl">/ ${f.goal} deep sessions</span></div>
+    <div class="rowflex" style="margin-top:10px;"><button class="ghost" onclick="S.focus.sessions=Math.max(0,S.focus.sessions-1);persist();">-</button><button class="solid" onclick="S.focus.sessions++;persist();">+ logged a session</button></div>
+    <div class="slabel" style="margin-top:14px;"><span>Distractions caught</span><span class="v">${f.distractions}</span></div><button class="ghost" onclick="S.focus.distractions++;persist();">+ caught myself drifting</button>
+    ${t&&t.n>1?`<div class="lbl" style="margin-top:14px;">Sessions &middot; last ${t.n} days</div>${spark(localSeries('focus'),'ai')}`:''}${coachBtn("focus","Beat my procrastination now")}${coachBox("focus")}</div>`;
+}
+function readingSection(){const r=S.reading;const t=localTrend('reading');
+  return `<div class="card"><div class="subhead">Reading</div>
+    <input value="${esc(r.book)}" placeholder="What you're reading..." oninput="S.reading.book=this.value;save();">
+    <div class="slabel" style="margin-top:14px;"><span>Minutes today</span><span class="v">${r.minutes}</span></div>
+    <div class="rowflex"><button class="ghost" onclick="S.reading.minutes=Math.max(0,S.reading.minutes-10);persist();">-10</button><button class="ghost" onclick="S.reading.minutes+=10;persist();">+10 min</button></div>
+    ${t&&t.n>1?`<div class="lbl" style="margin-top:14px;">Minutes &middot; last ${t.n} days</div>${spark(localSeries('reading'),'ai')}`:''}${coachBtn("reading","Keep me reading + retaining")}${coachBox("reading")}</div>`;
+}
+function schoolSection(){
+  const cv=LIVE.canvas||[],courses=LIVE.courses||[];
+  const grades=courses.length?`<div class="lbl" style="margin-bottom:8px;color:var(--ai)">◈ Classes & grades &middot; Canvas</div>${courses.map(c=>{const s=c.score;const cls=s==null?'':s>=90?'go':s>=80?'watch':'behind';return `<div class="item"><span style="flex:1">${esc(c.name)}</span>${s!=null?`<span class="astate ${cls}">${c.grade?esc(c.grade)+' &middot; ':''}${Math.round(s)}%</span>`:`<span class="lbl">no grade</span>`}</div>`;}).join("")}`:'';
+  const up=cv.length?`<div class="lbl" style="margin:14px 0 8px;color:var(--ai)">◈ Upcoming</div>${cv.map(c=>{const du=daysUntil(c.due);const dc=du<0?"behind":du<=2?"watch":"go";const dt=c.due?(du<0?(-du)+"d late":du===0?"today":du+"d"):"";return `<div class="item"><span class="dot ${dc}"></span><span style="flex:1">${esc(c.title)}${c.course?` <span class="lbl">&middot; ${esc(c.course)}</span>`:''}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}</div>`;}).join("")}`:'';
+  const items=S.school;
+  const manual=`<div class="lbl" style="margin:14px 0 8px;">Added by you</div>${items.length?items.map((x,i)=>{const du=daysUntil(x.due);const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S.school[${i}].done=!S.school[${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('school',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing added by hand.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add..."><input id="ld" type="date" style="max-width:140px;"><button class="add" onclick="if($('#li').value.trim()){addTo('school',{t:$('#li').value.trim(),due:$('#ld').value,done:false});}">Add</button></div>`;
+  const quiet=(!cv.length&&!courses.length)?`<div class="statline">Canvas connected but quiet (summer). Classes + grades fill in once term starts.</div>`:'';
+  return `<div class="card"><div class="subhead">Classes</div>${grades}${up}${manual}${quiet}${coachBtn("school","Build my study plan")}${coachBox("school")}</div>`;
 }
 const STAGES=["Idea","Scripting","Recording","Editing","Posted"];
-function createView(){return dhead("Create")+coachBtn("create","What should I work on next")+coachBox("create")+`
-  <div class="card"><div class="lbl">Loose Ends + vlog pipeline</div>${S.create.length?S.create.map((c,i)=>{const cl=c.stage==="Posted"?"go":(c.stage==="Editing"||c.stage==="Recording")?"watch":"";return `<div class="item"><span style="flex:1">${esc(c.t)}</span><span class="pill ${cl}" onclick="S.create[${i}].stage=STAGES[(STAGES.indexOf(S.create[${i}].stage)+1)%5];persist();">${c.stage} →</span><button class="del" onclick="rm('create',${i})">✕</button></div>`;}).join(""):`<div class="empty">No projects yet.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="ci" placeholder="New episode or video..."><button class="add" onclick="if($('#ci').value.trim()){addTo('create',{t:$('#ci').value.trim(),stage:'Idea'});}">Add</button></div></div>`;
+function workSection(){const items=S.work;
+  return `<div class="card"><div class="subhead">StartLine + tasks</div>${items.length?items.map((x,i)=>{const du=daysUntil(x.due);const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S.work[${i}].done=!S.work[${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('work',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing here yet.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add..."><input id="ld" type="date" style="max-width:140px;"><button class="add" onclick="if($('#li').value.trim()){addTo('work',{t:$('#li').value.trim(),due:$('#ld').value,done:false});}">Add</button></div>${coachBtn("work","What's my next move")}${coachBox("work")}</div>`;
 }
-function readingView(){const r=S.reading;return dhead("Reading")+coachBtn("reading","Keep me reading + retaining")+coachBox("reading")+`
-  <div class="card"><div class="lbl">Currently reading</div><input value="${esc(r.book)}" placeholder="Book / what you're reading..." oninput="S.reading.book=this.value;save();">
-    <div class="slabel" style="margin-top:14px;"><span>Minutes today</span><span class="v">${r.minutes}</span></div>
-    <div class="rowflex"><button class="ghost" onclick="S.reading.minutes=Math.max(0,S.reading.minutes-10);persist();">-10</button><button class="ghost" onclick="S.reading.minutes+=10;persist();">+10 min</button></div></div>`;
+function createSection(){return `<div class="card"><div class="subhead">Content pipeline</div>${S.create.length?S.create.map((c,i)=>{const cl=c.stage==="Posted"?"go":(c.stage==="Editing"||c.stage==="Recording")?"watch":"";return `<div class="item"><span style="flex:1">${esc(c.t)}</span><span class="pill ${cl}" onclick="S.create[${i}].stage=STAGES[(STAGES.indexOf(S.create[${i}].stage)+1)%5];persist();">${c.stage} →</span><button class="del" onclick="rm('create',${i})">✕</button></div>`;}).join(""):`<div class="empty">No projects yet.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="ci" placeholder="New episode or video..."><button class="add" onclick="if($('#ci').value.trim()){addTo('create',{t:$('#ci').value.trim(),stage:'Idea'});}">Add</button></div>${coachBtn("create","What should I work on next")}${coachBox("create")}</div>`;
 }
-function captureView(){return dhead("Inbox")+`
-  <div class="card"><div class="lbl">Everything lands here first</div><div class="rowflex" style="margin-bottom:12px;"><input id="capi" placeholder="Dump any idea or task..." onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('capture',{t:this.value.trim()});}"><button class="add" onclick="if($('#capi').value.trim()){addTo('capture',{t:$('#capi').value.trim()});}">Add</button></div>${S.capture.length?S.capture.map((c,i)=>`<div class="item"><span style="flex:1">${esc(c.t)}</span><button class="del" onclick="rm('capture',${i})">✕</button></div>`).join(""):`<div class="empty">Clear. Nothing waiting to be sorted.</div>`}<div class="statline">Sort it later. The point is you never lose it.</div></div>`;
-}
-function schoolView(){
-  const cv=LIVE.canvas||[],courses=LIVE.courses||[];
-  const grades=courses.length?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ Classes & grades &middot; Canvas</div>${courses.map(c=>{const s=c.score;const cls=s==null?'':s>=90?'go':s>=80?'watch':'behind';return `<div class="item"><span style="flex:1">${esc(c.name)}</span>${s!=null?`<span class="astate ${cls}">${c.grade?esc(c.grade)+' &middot; ':''}${Math.round(s)}%</span>`:`<span class="lbl">no grade</span>`}</div>`;}).join("")}</div>`:'';
-  const cvCard=cv.length?`<div class="card"><div class="lbl" style="color:var(--ai)">◈ Upcoming &middot; Canvas</div>${cv.map(c=>{const du=daysUntil(c.due);const dc=du<0?"behind":du<=2?"watch":"go";const dt=c.due?(du<0?(-du)+"d late":du===0?"today":du+"d"):"";return `<div class="item"><span class="dot ${dc}"></span><span style="flex:1">${esc(c.title)}${c.course?` <span class="lbl">&middot; ${esc(c.course)}</span>`:''}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}</div>`;}).join("")}</div>`:'';
-  const items=S.school;
-  const manual=`<div class="card"><div class="lbl">Added by you</div>${items.length?items.map((x,i)=>{const du=daysUntil(x.due);const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S.school[${i}].done=!S.school[${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('school',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing added by hand.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add..."><input id="ld" type="date" style="max-width:148px;"><button class="add" onclick="if($('#li').value.trim()){addTo('school',{t:$('#li').value.trim(),due:$('#ld').value,done:false});}">Add</button></div></div>`;
-  const note=(!cv.length&&!courses.length)?`<div class="card"><div class="statline">Canvas connected but quiet right now (summer = no upcoming). Classes and grades fill in once the term starts.</div></div>`:'';
-  return dhead("School")+grades+coachBtn("school","Build my study plan")+coachBox("school")+cvCard+manual+note;
-}
-function workView(){const items=S.work;return dhead("Work")+coachBtn("work","What's my next move")+coachBox("work")+`
-  <div class="card"><div class="lbl">Next actions</div>${items.length?items.map((x,i)=>{const du=daysUntil(x.due);const dc=x.done?"":du<0?"behind":du<=2?"watch":"go";const dt=x.due?(x.done?"":(du<0?(-du)+"d late":du===0?"today":du+"d")):"";return `<div class="item"><div class="check ${x.done?'on':''}" onclick="S.work[${i}].done=!S.work[${i}].done;persist();">${x.done?'✓':''}</div><span style="flex:1" class="${x.done?'strike':''}">${esc(x.t)}</span>${dt?`<span class="astate ${dc}">${dt}</span>`:""}<button class="del" onclick="rm('work',${i})">✕</button></div>`;}).join(""):`<div class="empty">Nothing here yet.</div>`}<div class="rowflex" style="margin-top:10px;"><input id="li" placeholder="Add..."><input id="ld" type="date" style="max-width:148px;"><button class="add" onclick="if($('#li').value.trim()){addTo('work',{t:$('#li').value.trim(),due:$('#ld').value,done:false});}">Add</button></div></div>`;
-}
-function moneyView(){const subs=S.money.subs;const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);return dhead("Money")+`
-  <div class="card"><div class="lbl">Monthly burn</div><div class="disp" style="font-size:38px;">$${m.toFixed(2)}<span class="lbl"> /mo</span></div><div class="statline">&asymp; $${(m*12).toFixed(0)} / year</div></div>
-  <div class="card"><div class="lbl">Subscriptions</div>${subs.map((s,i)=>`<div class="item"><span style="flex:1">${esc(s.name)}</span><span class="v" style="font-family:var(--mono)">$${(Number(s.cost)||0).toFixed(2)}</span><span class="pill" onclick="S.money.subs[${i}].cycle=S.money.subs[${i}].cycle==='mo'?'yr':'mo';persist();">${s.cycle}</span><button class="del" onclick="S.money.subs.splice(${i},1);persist();">✕</button></div>`).join("")}<div class="rowflex" style="margin-top:10px;"><input id="mn" placeholder="Service"><input id="mc" type="number" inputmode="decimal" placeholder="$" style="max-width:88px;"><button class="add" onclick="if($('#mn').value.trim()){S.money.subs.push({name:$('#mn').value.trim(),cost:Number($('#mc').value)||0,cycle:'mo'});persist();}">Add</button></div></div>`;
-}
-function careView(){const c=S.care;const grp=(t,arr,k)=>`<div class="card"><div class="lbl">${t}</div>${arr.map((x,i)=>`<div class="item"><div class="check ${x.d?'on':''}" onclick="toggleCare('${k}',${i})">${x.d?'✓':''}</div><span class="${x.d?'strike':''}">${esc(x.l)}</span></div>`).join("")}</div>`;
-  return dhead("Care")+`<div class="card" style="display:flex;align-items:center;gap:14px;"><span class="disp" style="font-size:34px;color:var(--ai);">${streak(c.dates)}</span><div><div class="lbl">day streak</div><div style="font-size:13px;color:var(--muted);margin-top:2px;">full AM + PM</div></div></div>${grp("Morning",c.am,"am")}${grp("Night",c.pm,"pm")}`;
+function careSection(){const c=S.care;const grp=(t,arr,k)=>`<div class="lbl" style="margin:12px 0 8px;">${t}</div>${arr.map((x,i)=>`<div class="item"><div class="check ${x.d?'on':''}" onclick="toggleCare('${k}',${i})">${x.d?'✓':''}</div><span class="${x.d?'strike':''}">${esc(x.l)}</span></div>`).join("")}`;
+  return `<div class="card"><div class="subhead">Skincare &middot; ${streak(c.dates)}d streak</div>${grp("Morning",c.am,"am")}${grp("Night",c.pm,"pm")}${coachBtn("care","Keep my streak")}${coachBox("care")}</div>`;
 }
 function toggleCare(g,i){S.care[g][i].d=!S.care[g][i].d;const full=S.care.am.every(x=>x.d)&&S.care.pm.every(x=>x.d);S.care.dates=(S.care.dates||[]).filter(d=>d!==today());if(full)S.care.dates.push(today());persist();}
-function winsView(){return dhead("Wins")+`
-  <div class="card"><div class="lbl">What you actually shipped</div><div class="rowflex" style="margin-bottom:12px;"><input id="wi" placeholder="Something you finished..." onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('wins',{t:this.value.trim(),date:today()});}"><button class="add" onclick="if($('#wi').value.trim()){addTo('wins',{t:$('#wi').value.trim(),date:today()});}">Log</button></div>${S.wins.length?S.wins.slice().reverse().map(w=>`<div class="item"><span style="flex:1">${esc(w.t)}</span><span class="lbl">${w.date.slice(5)}</span></div>`).join(""):`<div class="empty">Empty for now.</div>`}<div class="statline">Proof, for the days it feels like nothing got done.</div></div>`;
+function moneySection(){const subs=S.money.subs;const m=subs.reduce((a,s)=>a+(s.cycle==="yr"?s.cost/12:Number(s.cost)||0),0);
+  return `<div class="card"><div class="subhead">Money &middot; $${m.toFixed(0)}/mo</div>${subs.map((s,i)=>`<div class="item"><span style="flex:1">${esc(s.name)}</span><span class="v" style="font-family:var(--mono)">$${(Number(s.cost)||0).toFixed(2)}</span><span class="pill" onclick="S.money.subs[${i}].cycle=S.money.subs[${i}].cycle==='mo'?'yr':'mo';persist();">${s.cycle}</span><button class="del" onclick="S.money.subs.splice(${i},1);persist();">✕</button></div>`).join("")}<div class="rowflex" style="margin-top:10px;"><input id="mn" placeholder="Service"><input id="mc" type="number" inputmode="decimal" placeholder="$" style="max-width:84px;"><button class="add" onclick="if($('#mn').value.trim()){S.money.subs.push({name:$('#mn').value.trim(),cost:Number($('#mc').value)||0,cycle:'mo'});persist();}">Add</button></div></div>`;
+}
+function winsSection(){return `<div class="card"><div class="subhead">Wins</div><div class="rowflex" style="margin-bottom:12px;"><input id="wi" placeholder="Something you finished..." onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('wins',{t:this.value.trim(),date:today()});}"><button class="add" onclick="if($('#wi').value.trim()){addTo('wins',{t:$('#wi').value.trim(),date:today()});}">Log</button></div>${S.wins.length?S.wins.slice().reverse().map(w=>`<div class="item"><span style="flex:1">${esc(w.t)}</span><span class="lbl">${w.date.slice(5)}</span></div>`).join(""):`<div class="empty">Empty for now.</div>`}</div>`;
+}
+function inboxSection(){return `<div class="card"><div class="subhead">Inbox</div><div class="rowflex" style="margin-bottom:12px;"><input id="capi" placeholder="Dump any idea or task..." onkeydown="if(event.key==='Enter'&&this.value.trim()){addTo('capture',{t:this.value.trim()});}"><button class="add" onclick="if($('#capi').value.trim()){addTo('capture',{t:$('#capi').value.trim()});}">Add</button></div>${S.capture.length?S.capture.map((c,i)=>`<div class="item"><span style="flex:1">${esc(c.t)}</span><button class="del" onclick="rm('capture',${i})">✕</button></div>`).join(""):`<div class="empty">Clear.</div>`}</div>`;
+}
+const SECTIONS={recovery:recoverySection,sleep:sleepSection,movement:movementSection,fuel:fuelSection,hydration:hydrationSection,mood:moodSection,focus:focusSection,reading:readingSection,school:schoolSection,work:workSection,create:createSection,care:careSection,money:moneySection,wins:winsSection,inbox:inboxSection};
+
+function domainView(key){const d=DOMAINS.find(x=>x.key===key);if(!d)return dhead("-")+`<div class="empty">Not found.</div>`;
+  return dhead(d.label)+`<button class="domcoach" onclick="coach('dom-${key}')">◈ Read my whole ${d.label.toLowerCase()}</button>${coachBox("dom-"+key)}`+d.subs.map(s=>SECTIONS[s]()).join("");
 }
 function overseerView(){return dhead("Overseer")+`
-  <div class="core" style="padding:4px 0 2px;"><div class="ringwrap" style="width:120px;height:120px;"><div class="glow glow-ai"></div>${ring(1,"ai",120,7,`<div style="font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ai);">CORE</div>`,true)}</div></div>
-  <div class="card"><div class="lbl">It reads every system</div>
-   ${S.briefing?`<div class="coachbox">${esc(S.briefing)}</div>`:`<div class="empty">No briefing yet. Hit the button or ask it anything.</div>`}
-   <button class="solid" id="ovb" style="margin-top:6px;" onclick="brief2()">Read my whole day</button>
+  <div class="card"><div class="lbl">Ask it anything - it sees every system</div>
+   ${S.briefing?`<div class="coachbox" style="margin-top:11px;">${esc(S.briefing)}</div>`:`<div class="empty" style="margin-top:11px;">No briefing yet. Read your day or ask a question.</div>`}
+   <button class="solid" id="ovb" style="margin-top:12px;" onclick="brief2()">Read my whole day</button>
    <div class="rowflex" style="margin-top:10px;"><button class="voicebtn" onclick="listen()" title="Talk to it">🎙</button><input id="ovm" placeholder="Ask the Overseer..." onkeydown="if(event.key==='Enter')ask()"><button class="add" onclick="ask()">Send</button></div>
    <div class="vtoggle ${autospeak?'on':''}" onclick="autospeak=!autospeak;render();">🔊 ${autospeak?'speaking replies ON':'speak replies OFF'}</div>
   </div>`;
 }
+function captureView(){return inboxSection().replace('<div class="card">',`<button class="back" onclick="go('home')">← Today</button><div class="dtitle">Capture</div><div class="card">`);}
 function reviewView(){return dhead("Weekly review")+`
-  <div class="card"><div class="lbl">Step back</div><div class="statline" style="margin-top:0;">The Overseer reads your whole week and names the pattern - what's trending, what's slipping, the one change to make.</div>
+  <div class="card"><div class="lbl">Step back</div><div class="statline" style="margin-top:6px;">The Overseer reads your whole week - health trends, school, habits - and names the pattern and the one change to make.</div>
    <button class="solid" id="rvb" style="margin-top:14px;" onclick="review()">Run deep review</button>
    ${S.review?`<div class="coachbox" style="margin-top:13px;">${esc(S.review)}</div>`:''}</div>`;
 }
 
+function healthLine(){const h=LIVE.health,tr=LIVE.trends||{};if(!h)return "no live health yet";const LAB={hrv:"HRV",rhr:"resting HR",sleep:"sleep h",steps:"steps",energy:"active kcal",kcal:"dietary kcal",protein:"protein g",carbs:"carbs g",vo2max:"VO2max",hrr:"HR recovery",respiratory:"resp rate",spo2:"SpO2",exercise:"exercise min",stand:"stand hrs",walkinghr:"walking HR"};return Object.keys(h).filter(k=>k!=="at").map(k=>{const t=tr[k];const p=t&&t.pct!=null?` (${t.pct>0?'+':''}${t.pct}% vs baseline)`:'';return `${LAB[k]||k} ${Math.round(h[k]*10)/10}${p}`;}).join(", ");}
 function snapshot(){
-  const a=AREAS.map(x=>{const s=x.status();return `${x.label}: ${s.word} (${s.val})`;}).join("; ");
-  const h=LIVE.health,tr=LIVE.trends||{};
   const courses=(LIVE.courses||[]).map(c=>c.name+(c.score!=null?` ${Math.round(c.score)}%`:'')).join(", ")||"none loaded";
   const sch=schoolAll().filter(x=>!x.done).map(x=>x.t+(x.due?` [due ${x.due}]`:"")).join(", ")||"none";
-  const hrvT=tr.hrv&&tr.hrv.pct!=null?` (${tr.hrv.pct>0?'+':''}${tr.hrv.pct}% vs baseline)`:'';
-  return `Standing - ${a}.
-Body: ${h&&h.sleep!=null?h.sleep:S.body.sleep}h sleep, HRV ${h&&h.hrv!=null?Math.round(h.hrv):(S.body.hrv||'?')}${hrvT}, RHR ${h&&h.rhr!=null?Math.round(h.rhr):(S.body.rhr||'?')}, trained ${S.body.trained}.${h?' (live Apple Health)':''}
-Fuel today: ${h&&h.kcal!=null?Math.round(h.kcal)+' kcal':'not logged'}${h&&h.protein!=null?', '+Math.round(h.protein)+'g protein':''}.
-Classes & grades: ${courses}.
-Open school: ${sch}.
-Focus: ${S.focus.sessions}/${S.focus.goal}, one thing "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.
-Reading: ${S.reading.book||'nothing set'}, ${S.reading.minutes}m today. Inbox: ${S.capture.length}. Care streak: ${streak(S.care.dates)}d.`;
+  return `Health (live, Apple Health): ${healthLine()}.
+Trained today: ${S.body.trained}. Water: ${S.body.water} cups.
+Classes & grades: ${courses}. Open school work: ${sch}.
+Focus: ${S.focus.sessions}/${S.focus.goal} sessions, one thing "${S.focus.oneThing||'unset'}", ${S.focus.distractions} distractions.
+Mood: ${S.mind.mood}/5. Reading: ${S.reading.book||'nothing set'}, ${S.reading.minutes}m today.
+Content pipeline: ${S.create.map(c=>c.t+" ["+c.stage+"]").join("; ")||"empty"}. Work tasks open: ${S.work.filter(x=>!x.done).length}.
+Care streak: ${streak(S.care.dates)}d. Inbox: ${S.capture.length} unsorted. Recent wins: ${S.wins.slice(-4).map(w=>w.t).join("; ")||"none"}.`;
 }
-
 function coachPrompt(area){
+  if(area.startsWith("dom-")){const d=DOMAINS.find(x=>x.key===area.slice(4));return `${snapshot()}\n\nGive me your read on my ${d?d.label:area} specifically: what's good, what needs attention, and the top 2 moves for it. Tight, direct.`;}
   const courses=(LIVE.courses||[]).map(c=>c.name+(c.score!=null?` (${Math.round(c.score)}%)`:'')).join(", ")||"not loaded";
   const sch=schoolAll().filter(x=>!x.done).map(x=>x.t+(x.due?` due ${x.due}`:"")).join("; ")||"none upcoming";
-  const h=LIVE.health||{},tr=LIVE.trends||{};
+  const h=LIVE.health||{};
   switch(area){
-    case "body": return `${snapshot()}\n\nGive me today's recovery call: one word (PUSH / STEADY / RECOVER), one line why from my HRV/RHR/sleep vs my baseline, then 2 specific moves - training intensity today + one recovery lever. Fuel means eating enough, never restriction.`;
-    case "sleep": return `My sleep last night: ${h.sleep!=null?h.sleep+'h':'unknown'}${tr.sleep&&tr.sleep.pct!=null?`, ${tr.sleep.pct>0?'+':''}${tr.sleep.pct}% vs my recent average`:''}. Give me 2 specific, doable things to improve tonight's sleep. No generic advice.`;
-    case "fuel": return `My fuel today from Cronometer: ${h.kcal!=null?Math.round(h.kcal)+' kcal':'not logged yet'}, ${h.protein!=null?Math.round(h.protein)+'g protein':'protein unknown'}${h.carbs!=null?', '+Math.round(h.carbs)+'g carbs':''}. I train for strength. Am I eating ENOUGH to train and recover today, and what 2 things would help me fuel better? Never restriction, calorie-cutting, or weight talk - only fueling well.`;
-    case "school": return `My classes and current grades: ${courses}. Upcoming work: ${sch}. For each class (especially anything under 85% or due soonest), give me a specific way to study it this week and 1-2 real free resources, named (e.g. Khan Academy for algebra, Paul's Online Math Notes for precalc). Concrete and prioritized. If it's summer with nothing due, give me a light way to stay sharp for next term instead.`;
-    case "focus": return `${snapshot()}\n\nI keep procrastinating. My one thing today is "${S.focus.oneThing||'unset'}", I've done ${S.focus.sessions}/${S.focus.goal} sessions and caught ${S.focus.distractions} distractions. Name the single most important move to stop stalling and start, right now. Be direct, one concrete action.`;
-    case "mind": return `${snapshot()}\n\nMood is ${S.mind.mood}/5. Read my day. Give me one grounding thing to do tonight and one honest observation. Warm but not soft.`;
-    case "create": return `My content pipeline (Loose Ends docs + vlog): ${S.create.map(c=>c.t+" ["+c.stage+"]").join("; ")||"empty"}. I edit in Final Cut, do my own voiceover. What should I move forward next and the one concrete step to ship it? Push me to finish, not collect ideas.`;
-    case "reading": return `I'm reading "${S.reading.book||'nothing set'}", ${S.reading.minutes} min today. Give me one nudge to keep the habit and one technique to actually retain what I read. Short.`;
-    case "work": return `My StartLine / work next-actions: ${S.work.filter(x=>!x.done).map(x=>x.t+(x.due?" (due "+x.due+")":"")).join("; ")||"none"}. What's the single next move and why that one first?`;
-    case "money": return `My subscriptions: ${S.money.subs.map(s=>s.name+" $"+s.cost+"/"+s.cycle).join(", ")||"none"}. Anything worth questioning? One honest line, no lecture.`;
-    case "care": return `Skincare streak ${streak(S.care.dates)} days; today AM done: ${S.care.am.every(x=>x.d)}, PM done: ${S.care.pm.every(x=>x.d)}. One line of encouragement to keep the streak - no product upsell.`;
-    case "wins": return `Recent wins: ${S.wins.slice(-6).map(w=>w.t).join("; ")||"none logged"}. Reflect back what's going well in one line and one thing to build on. Genuine, brief.`;
-    case "capture": return `My inbox to sort: ${S.capture.map(c=>c.t).join("; ")||"empty"}. Help me triage - what to do first and what to drop. Short.`;
+    case "recovery": return `${snapshot()}\n\nGive me today's recovery call: one word (PUSH / STEADY / RECOVER), one line why from my HRV/RHR/sleep vs baseline, then 2 specific moves - training intensity today + one recovery lever. Fuel means eating enough, never restriction.`;
+    case "sleep": return `My sleep: ${h.sleep!=null?h.sleep+'h last night':'unknown'}. Give me 2 specific, doable things to improve tonight's sleep. No generic advice.`;
+    case "movement": return `${snapshot()}\n\nMovement: ${h.steps!=null?Math.round(h.steps)+' steps':'steps unknown'}${h.energy!=null?', '+Math.round(h.energy)+' active kcal':''}. I lift 3x/week. Am I moving enough on top of training, one specific thing to do today? Frame around health and energy, never burning calories to lose weight.`;
+    case "fuel": return `My fuel today: ${h.kcal!=null?Math.round(h.kcal)+' kcal':'not logged'}, ${h.protein!=null?Math.round(h.protein)+'g protein':'protein unknown'}. I train for strength. Am I eating ENOUGH to train and recover, and 2 things to fuel better? Never restriction, calorie-cutting, or weight talk.`;
+    case "hydration": return `I've had ${S.body.water} cups today (goal ~8). One specific nudge to hydrate, tied to training. Short.`;
+    case "mood": return `${snapshot()}\n\nMood ${S.mind.mood}/5. Read my day. One grounding thing to do tonight and one honest observation. Warm but not soft.`;
+    case "focus": return `${snapshot()}\n\nI keep procrastinating. My one thing is "${S.focus.oneThing||'unset'}", ${S.focus.sessions}/${S.focus.goal} sessions, ${S.focus.distractions} distractions. Name the single most important move to start, right now. One concrete action.`;
+    case "reading": return `Reading "${S.reading.book||'nothing set'}", ${S.reading.minutes}m today. One nudge to keep the habit and one technique to retain more. Short.`;
+    case "school": return `My classes and grades: ${courses}. Upcoming: ${sch}. For each class (especially under 85% or due soonest), a specific way to study it this week and 1-2 named free resources (e.g. Khan Academy for algebra, Paul's Online Math Notes for precalc). Concrete, prioritized. If summer with nothing due, give a light way to stay sharp for next term.`;
+    case "work": return `My StartLine / work tasks: ${S.work.filter(x=>!x.done).map(x=>x.t).join("; ")||"none"}. Single next move and why that one first?`;
+    case "create": return `My content pipeline: ${S.create.map(c=>c.t+" ["+c.stage+"]").join("; ")||"empty"}. I edit in Final Cut, do my own VO. What to move forward next and the one step to ship it? Push me to finish, not collect ideas.`;
+    case "care": return `Skincare streak ${streak(S.care.dates)} days. One line to keep it - no product upsell.`;
     default: return `${snapshot()}\n\nLook at my ${area} and give me one specific, useful move. Short.`;
   }
 }
-async function callApi(message){
-  const r=await fetch("/api/overseer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message})});
-  const d=await r.json();
-  if(d.error) throw new Error(d.error);
-  return d.text||"No response.";
-}
+async function callApi(message){const r=await fetch("/api/overseer",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({message})});const d=await r.json();if(d.error)throw new Error(d.error);return d.text||"No response.";}
 async function coach(area){COACH[area]="Reading your data...";render();try{const t=await callApi(coachPrompt(area));COACH[area]=t;if(autospeak)speak(t);}catch(e){COACH[area]="Couldn't reach the Overseer: "+e.message;}render();}
-async function brief(){const btn=$('#hbrief');if(btn)btn.textContent="◈ Reading systems...";try{const t=await callApi("Brief me. "+snapshot()+"\n\nGive me ONE short paragraph: the call for today and the single most important move. Then a one-line PS on what's trending up or down.");S.call=t;S.briefing=t;save();if(autospeak)speak(t);}catch(e){S.call="Overseer offline: "+e.message;}render();}
-async function brief2(){const btn=$('#ovb');if(btn)btn.textContent="Reading every system...";try{const t=await callApi("Full briefing. "+snapshot()+"\n\nGo system by system briefly: what's good, what needs me, and the top 3 moves for today in priority order. Tight.");S.briefing=t;save();if(autospeak)speak(t);}catch(e){S.briefing="Overseer offline: "+e.message;}render();}
+async function brief(){const b=$('#hbrief');if(b)b.textContent="◈ Reading...";try{const t=await callApi("Brief me. "+snapshot()+"\n\nOne short paragraph: the call for today and the single most important move. Then a one-line PS on what's trending up or down.");S.call=t;S.briefing=t;save();if(autospeak)speak(t);}catch(e){S.call="Overseer offline: "+e.message;}render();}
+async function brief2(){const b=$('#ovb');if(b)b.textContent="Reading every system...";try{const t=await callApi("Full briefing. "+snapshot()+"\n\nGo domain by domain briefly: what's good, what needs me, top 3 moves for today in priority order. Tight.");S.briefing=t;save();if(autospeak)speak(t);}catch(e){S.briefing="Overseer offline: "+e.message;}render();}
 async function ask(){const el=$('#ovm');if(!el)return;const q=el.value.trim();if(!q)return;S.briefing="Thinking...";render();try{const t=await callApi(q+"\n\nContext: "+snapshot());S.briefing=t;save();if(autospeak)speak(t);}catch(e){S.briefing="Overseer offline: "+e.message;}render();}
-async function review(){const btn=$('#rvb');if(btn)btn.textContent="Thinking hard...";try{const hist=(LIVE.history||[]).slice(0,14).map(h=>`${h.at?h.at.slice(5,10):'?'}: sleep ${h.sleep==null?'-':h.sleep} hrv ${h.hrv==null?'-':h.hrv} rhr ${h.rhr==null?'-':h.rhr}`).join(" | ")||"no history yet";S.review="Reading your week...";render();const t=await callApi("Weekly deep review. "+snapshot()+"\n\nHealth history (recent first): "+hist+"\n\nGive me: 1) the honest headline on my week, 2) what's trending up, 3) what's slipping, 4) the ONE change for next week. Direct, no fluff.");S.review=t;save();if(autospeak)speak(t);}catch(e){S.review="Overseer offline: "+e.message;}render();}
+async function review(){const b=$('#rvb');if(b)b.textContent="Thinking hard...";S.review="Reading your week...";render();try{const hist=(LIVE.history||[]).slice(0,14).map(h=>`${h.at?h.at.slice(5,10):'?'}: ${Object.keys(h).filter(k=>k!=='at').map(k=>k+' '+h[k]).join(' ')}`).join(" | ")||"no history yet";const t=await callApi("Weekly deep review. "+snapshot()+"\n\nHealth history (recent first): "+hist+"\n\nGive me: 1) honest headline on my week, 2) what's trending up, 3) what's slipping, 4) the ONE change for next week. Direct.");S.review=t;save();if(autospeak)speak(t);}catch(e){S.review="Overseer offline: "+e.message;}render();}
 function speak(t){try{if(!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(String(t).replace(/[*#`>_~]/g,''));u.rate=1.03;speechSynthesis.speak(u);}catch(e){}}
 function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice input isn't supported in this browser - type instead. (Spoken replies still work.)");return;}try{const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=1;r.onresult=e=>{const tx=e.results[0][0].transcript;const el=$('#ovm');if(el){el.value=tx;ask();}};r.onerror=()=>{};r.start();}catch(e){}}
 
 function go(key){view=key;const sc=$("#scroll");if(sc)sc.scrollTop=0;render();}
-function render(){const sc=$("#scroll");if(!sc)return;sc.innerHTML=(view==="home")?renderHome():detail(view);renderNav();}
-function renderNav(){const nav=$("#nav");const tabs=[["home","⌘","Command"],["capture","＋","Capture"],["overseer","◈","Overseer"]];nav.innerHTML=tabs.map(t=>{const k=t[0];const on=(view===k)||(k==='home'&&view!=='capture'&&view!=='overseer');return `<button class="${on?'on':''}" onclick="go('${k}')"><span class="ico">${t[1]}</span>${t[2]}</button>`;}).join("");}
+function render(){const sc=$("#scroll");if(!sc)return;let html;if(view==="home")html=renderHome();else if(view==="overseer")html=overseerView();else if(view==="capture")html=captureView();else if(view==="review")html=reviewView();else if(view.indexOf("d-")===0)html=domainView(view.slice(2));else html=renderHome();sc.innerHTML=html;renderNav();}
+function renderNav(){const nav=$("#nav");const tabs=[["home","⌘","Today"],["capture","＋","Capture"],["overseer","◈","Overseer"]];nav.innerHTML=tabs.map(t=>{const k=t[0];const on=(view===k)||(k==='home'&&view!=='capture'&&view!=='overseer');return `<button class="${on?'on':''}" onclick="go('${k}')"><span class="ico">${t[1]}</span>${t[2]}</button>`;}).join("");}
 function tick(){const c=$("#clock");if(c)c.textContent=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
 async function loadLive(){
   try{const r=await fetch("/api/health");const d=await r.json();if(d&&d.ok){LIVE.health=d.data||null;LIVE.history=d.history||[];LIVE.trends=d.trends||{};}}catch(e){}
   try{const r=await fetch("/api/canvas");const d=await r.json();if(d&&d.ok){if(Array.isArray(d.items))LIVE.canvas=d.items;if(Array.isArray(d.courses))LIVE.courses=d.courses;}}catch(e){}
   render();
 }
-tick();setInterval(tick,30000);
+recordLocal();tick();setInterval(tick,30000);
 render();
 loadLive();
 </script>

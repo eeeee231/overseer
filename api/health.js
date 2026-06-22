@@ -1,8 +1,6 @@
-// Overseer — Health pipe (Vercel serverless function). Lives at /api/health.
-// POST  (from your Apple Shortcut): stores the latest health snapshot.
-// GET   (from the hub): returns the latest snapshot.
-// Storage = Upstash Redis (free, from the Vercel Marketplace). Speaks plain HTTP,
-// so no packages needed — it just reads two env vars Vercel injects for you.
+// Overseer — Health pipe v2. Lives at /api/health.
+// POST (from Shortcut): appends a snapshot to a rolling history (one per day).
+// GET (from hub): returns latest + history + computed trends.
 
 async function kv(cmd) {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
@@ -16,41 +14,57 @@ async function kv(cmd) {
   const d = await r.json();
   return d.result;
 }
-
 function num(v) {
   if (v === undefined || v === null || v === "") return null;
   const n = parseFloat(String(v).replace(/[^0-9.\-]/g, ""));
   return isNaN(n) ? null : n;
 }
+function trend(hist, key) {
+  const vals = hist.map((h) => h[key]).filter((v) => v != null && !isNaN(v));
+  if (vals.length === 0) return null;
+  const latest = vals[0];
+  const base = vals.slice(1, 8);
+  if (base.length === 0) return { latest, avg: null, pct: null, n: vals.length };
+  const avg = base.reduce((a, b) => a + b, 0) / base.length;
+  const pct = avg ? Math.round(((latest - avg) / avg) * 100) : null;
+  return { latest, avg: Math.round(avg * 10) / 10, pct, n: vals.length };
+}
 
 export default async function handler(req, res) {
-  const KEY = "overseer:health";
+  const HIST = "overseer:health:hist";
   try {
     if (req.method === "POST") {
-      // Optional: if you set OVERSEER_SECRET in Vercel, the Shortcut must send it.
       const secret = process.env.OVERSEER_SECRET;
       if (secret && req.headers["x-overseer-secret"] !== secret) {
         return res.status(401).json({ ok: false, error: "bad secret" });
       }
       const b = req.body || {};
-      const data = {
-        sleep: num(b.sleep),
-        hrv: num(b.hrv),
-        rhr: num(b.rhr),
-        steps: num(b.steps),
-        energy: num(b.energy),
+      const entry = {
+        sleep: num(b.sleep), hrv: num(b.hrv), rhr: num(b.rhr),
+        steps: num(b.steps), energy: num(b.energy),
+        kcal: num(b.kcal), protein: num(b.protein), carbs: num(b.carbs),
         at: new Date().toISOString(),
       };
-      await kv(["SET", KEY, JSON.stringify(data)]);
-      return res.status(200).json({ ok: true, data });
+      let hist = [];
+      try { const raw = await kv(["GET", HIST]); if (raw) hist = JSON.parse(raw); } catch (e) {}
+      const day = entry.at.slice(0, 10);
+      if (hist[0] && hist[0].at && hist[0].at.slice(0, 10) === day) hist[0] = entry;
+      else hist.unshift(entry);
+      hist = hist.slice(0, 60);
+      await kv(["SET", HIST, JSON.stringify(hist)]);
+      return res.status(200).json({ ok: true, data: entry });
     }
     if (req.method === "GET") {
-      const raw = await kv(["GET", KEY]);
-      return res.status(200).json({ ok: true, data: raw ? JSON.parse(raw) : null });
+      let hist = [];
+      try { const raw = await kv(["GET", HIST]); if (raw) hist = JSON.parse(raw); } catch (e) {}
+      const trends = {
+        hrv: trend(hist, "hrv"), rhr: trend(hist, "rhr"), sleep: trend(hist, "sleep"),
+        steps: trend(hist, "steps"), kcal: trend(hist, "kcal"), protein: trend(hist, "protein"),
+      };
+      return res.status(200).json({ ok: true, data: hist[0] || null, history: hist, trends });
     }
     return res.status(405).json({ ok: false, error: "GET or POST only" });
   } catch (e) {
-    // Always 200 with ok:false so the hub keeps working even before storage is set up.
     return res.status(200).json({ ok: false, error: String(e) });
   }
 }

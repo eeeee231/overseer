@@ -49,6 +49,13 @@
   .ainext b{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;opacity:.7;}
   .briefbtn{width:100%;background:var(--ai);color:#06243f;border:0;border-radius:11px;font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:13px;cursor:pointer;margin-top:11px;}
   .thinking{font-family:var(--mono);font-size:12px;color:var(--ai);letter-spacing:.04em;}
+  .rsyswrap{margin-top:13px;display:flex;flex-direction:column;gap:11px;}
+  .rsys{border-top:1px solid var(--line);padding-top:11px;}
+  .rsystop{display:flex;align-items:center;gap:8px;}
+  .rsysname{font-size:13.5px;font-weight:600;letter-spacing:-.01em;}
+  .rsystop .dcword{margin-left:auto;}
+  .rsysnote{font-size:13px;color:var(--muted);line-height:1.5;margin-top:4px;}
+  .bodybtn{width:100%;background:linear-gradient(180deg,rgba(95,168,255,.14),rgba(95,168,255,.04));border:1px solid rgba(95,168,255,.3);color:var(--ai);font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:13px;border-radius:13px;cursor:pointer;margin:11px 0 2px;display:flex;align-items:center;justify-content:center;gap:8px;}
 
   /* vitals grid */
   .sect{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin:20px 2px 9px;display:flex;justify-content:space-between;align-items:center;}
@@ -139,7 +146,7 @@ const $ = s => document.querySelector(s);
 const today = () => new Date().toISOString().slice(0,10);
 const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let view="home";
-let LIVE={health:null,history:[],trends:{},canvas:null,courses:null};
+let LIVE={health:null,history:[],trends:{},canvas:null,courses:null,meta:null};
 let COACH={};
 let autospeak=false;
 
@@ -310,6 +317,34 @@ function renderAI(o,tag){if(!o)return '';o=parseAI(o);
 }
 function spoken(o){o=parseAI(o);return [o.headline,o.read,(o.moves||[]).join('. '),o.next].filter(Boolean).join('. ');}
 
+const SYSLABEL={cardio:"Cardiovascular",respiratory:"Respiratory & blood O₂",fitness:"Aerobic fitness",sleep:"Sleep architecture",activity:"Activity & energy",fuel:"Fuel & nutrition",gait:"Movement quality",signals:"Body signals",other:"Other signals"};
+const SYSORDER=["cardio","respiratory","fitness","sleep","activity","fuel","gait","signals","other"];
+const FALLBACK_META={hrv:{label:"HRV",unit:"ms",good:true,sys:"cardio"},rhr:{label:"Resting HR",unit:"bpm",good:false,sys:"cardio"},walkinghr:{label:"Walking HR",unit:"bpm",good:false,sys:"cardio"},hrr:{label:"HR recovery",unit:"bpm",good:true,sys:"cardio"},hr_avg:{label:"Avg HR",unit:"bpm",good:false,sys:"cardio"},hr_min:{label:"Min HR",unit:"bpm",good:false,sys:"cardio"},hr_max:{label:"Max HR",unit:"bpm",good:null,sys:"cardio"},spo2:{label:"Blood O₂",unit:"%",good:true,sys:"respiratory"},respiratory:{label:"Respiratory",unit:"br/min",good:false,sys:"respiratory"},vo2max:{label:"VO₂ max",unit:"",good:true,sys:"fitness"},effort:{label:"Effort",unit:"MET",good:true,sys:"fitness"},energy:{label:"Active energy",unit:"kcal",good:true,sys:"activity"},restingenergy:{label:"Resting energy",unit:"kcal",good:null,sys:"activity"},exercise:{label:"Exercise",unit:"min",good:true,sys:"activity"},steps:{label:"Steps",unit:"",good:true,sys:"activity"},distance:{label:"Distance",unit:"km",good:true,sys:"activity"},flights:{label:"Flights",unit:"",good:true,sys:"activity"},stand:{label:"Stand",unit:"h",good:true,sys:"activity"},sleep:{label:"Asleep",unit:"h",good:true,sys:"sleep"},sleep_rem:{label:"REM",unit:"h",good:true,sys:"sleep"},sleep_deep:{label:"Deep",unit:"h",good:true,sys:"sleep"},sleep_core:{label:"Core",unit:"h",good:true,sys:"sleep"},sleep_awake:{label:"Awake",unit:"h",good:false,sys:"sleep"},sleep_inbed:{label:"In bed",unit:"h",good:null,sys:"sleep"},sleep_eff:{label:"Efficiency",unit:"%",good:true,sys:"sleep"},wristtemp:{label:"Wrist temp",unit:"°",good:null,sys:"sleep"},kcal:{label:"Fuel",unit:"kcal",good:true,sys:"fuel"},protein:{label:"Protein",unit:"g",good:true,sys:"fuel"},carbs:{label:"Carbs",unit:"g",good:true,sys:"fuel"},fat:{label:"Fat",unit:"g",good:null,sys:"fuel"},fiber:{label:"Fiber",unit:"g",good:true,sys:"fuel"},sugar:{label:"Sugar",unit:"g",good:false,sys:"fuel"},water:{label:"Water",unit:"L",good:true,sys:"fuel"},caffeine:{label:"Caffeine",unit:"mg",good:null,sys:"fuel"},sodium:{label:"Sodium",unit:"mg",good:null,sys:"fuel"},mindful:{label:"Mindful",unit:"min",good:true,sys:"signals"},daylight:{label:"Daylight",unit:"min",good:true,sys:"signals"},envaudio:{label:"Env audio",unit:"dB",good:false,sys:"signals"},headphoneaudio:{label:"Headphone",unit:"dB",good:false,sys:"signals"},bodytemp:{label:"Body temp",unit:"°",good:null,sys:"signals"}};
+function metaFor(k){return (LIVE.meta&&LIVE.meta[k])||FALLBACK_META[k]||{label:k.replace(/_/g,' '),unit:"",good:null,sys:"other"};}
+function fmt(v){if(v==null||v==="")return '–';const a=Math.abs(v);return a>=1000?Math.round(v).toLocaleString():a>=100?String(Math.round(v)):String(Math.round(v*10)/10);}
+function arrowFor(t,good){if(!t||t.pct==null||t.pct===0)return `<div class="va flat">— vs avg</div>`;const up=t.pct>0;let cls='flat';if(good===true)cls=up?'up':'down';else if(good===false)cls=up?'down':'up';return `<div class="va ${cls}">${up?'▲':'▼'} ${Math.abs(t.pct)}%</div>`;}
+function bySystem(){const h=LIVE.health||{},g={};Object.keys(h).forEach(k=>{if(k==="at")return;const m=metaFor(k);(g[m.sys]=g[m.sys]||[]).push(k);});return g;}
+function sysStatus(keys){const tr=LIVE.trends||{};let good=0,bad=0;keys.forEach(k=>{const m=metaFor(k),t=tr[k];if(!t||t.pct==null||Math.abs(t.pct)<5||m.good==null)return;const up=t.pct>0,ok=m.good?up:!up;ok?good++:bad++;});if(good+bad===0)return{cls:'watch',word:'STEADY'};if(bad>good)return{cls:'behind',word:'NEEDS WORK'};if(good>bad)return{cls:'go',word:'STRONG'};return{cls:'watch',word:'STEADY'};}
+function metricTile(k){const h=LIVE.health||{},tr=LIVE.trends||{},m=metaFor(k);return `<div class="vtile"><div class="vk">${m.label}</div><div class="vv">${fmt(h[k])}${m.unit?`<small> ${m.unit}</small>`:''}</div>${arrowFor(tr[k],m.good)}</div>`;}
+function stateCls(s){s=(s||'').toLowerCase();return (s.includes('strong')||s.includes('good')||s.includes('high'))?'go':(s.includes('watch')||s.includes('weak')||s.includes('low')||s.includes('work'))?'behind':'watch';}
+function renderReport(o){o=parseAI(o);const title=o.title?`<div class="aih">${esc(clean(o.title))}</div>`:'';const sum=o.summary?`<div class="air">${esc(clean(o.summary))}</div>`:'';const secs=(o.systems||[]).map(s=>`<div class="rsys"><div class="rsystop"><span class="rsysname">${esc(clean(s.name||''))}</span><span class="dcword ${stateCls(s.state)}">${esc((s.state||'').toUpperCase())}</span></div><div class="rsysnote">${esc(clean(s.note||''))}</div></div>`).join('');const focus=o.focus?`<div class="ainext"><b>Focus</b><span>${esc(clean(o.focus))}</span></div>`:'';return `<div class="ai"><div class="tag">◆ Inside your body</div>${title}${sum}${secs?`<div class="rsyswrap">${secs}</div>`:''}${focus}</div>`;}
+function bodyReportPrompt(){const h=LIVE.health||{},tr=LIVE.trends||{};const lines=Object.keys(h).filter(k=>k!=='at').map(k=>{const m=metaFor(k),t=tr[k];return `${m.label}: ${fmt(h[k])}${m.unit||''}${t&&t.pct!=null?` (${t.pct>0?'+':''}${t.pct}% vs ${t.n}d baseline)`:''}`;}).join('; ');const r=recoveryRead(),sr=strainRead(),sq=sleepRead();return `Everything my body recorded today, with trends vs my own baseline: ${lines||'still calibrating, little data yet'}. Computed scores: recovery ${r?r.score+'%':'n/a'}, strain ${sr?sr.score:'n/a'}, sleep quality ${sq?sq.score+'%':'n/a'}.\n\nWrite me a report from inside my body - read me system by system, like my own physiology is reporting in. Return ONLY this JSON: {"title":"3-5 word headline on my body today","summary":"2 plain sentences, the big picture","systems":[{"name":"e.g. Cardiovascular","state":"strong|steady|watch","note":"one plain sentence tied to my actual numbers"}],"focus":"the single most important thing for my body right now"}. Cover the systems present in my data. Keep every note concrete and tied to my numbers. Never mention weight, body fat, or restriction - fuel means eating enough to train and recover.`;}
+async function bodyReportRun(){S.bodyReport={loading:true};render();try{const t=await callApi(bodyReportPrompt());S.bodyReport=parseAI(t);save();if(autospeak)speak(spoken({headline:S.bodyReport.title,read:S.bodyReport.summary,next:S.bodyReport.focus}));}catch(e){S.bodyReport={title:"Overseer offline",summary:e.message};}render();}
+function bodyReportView(){
+  const h=LIVE.health;
+  if(!h)return dhead("Body report")+`<div class="empty">No health data yet. Once Health Auto Export pushes a reading, your full readout builds here - every system, every signal.</div>`;
+  const g=bySystem();
+  const systems=SYSORDER.filter(s=>g[s]&&g[s].length).map(s=>{const st=sysStatus(g[s]);return `<div class="card"><div class="dctop" style="margin-bottom:13px;"><span class="dcdot ${st.cls}"></span><span class="dcname">${SYSLABEL[s]||s}</span><span class="dcword ${st.cls}">${st.word}</span></div><div class="vit">${g[s].map(metricTile).join('')}</div></div>`;}).join('');
+  const ai=S.bodyReport?(S.bodyReport.loading?`<div class="ai"><div class="tag">◆ Inside your body</div><div class="thinking">Reading every system…</div></div>`:renderReport(S.bodyReport)):'';
+  const count=Object.keys(h).filter(k=>k!=='at').length;
+  return dhead("Body report")+`<div class="statline" style="margin:-8px 0 14px;">${count} signals captured today, read system by system.</div>
+    ${homeStats()}
+    <button class="domcoach" onclick="bodyReportRun()">${S.bodyReport&&!S.bodyReport.loading?'↻ Re-read my body':'◆ Generate the full readout'}</button>
+    ${ai}
+    <div class="sect">Systems</div>
+    ${systems}`;
+}
+
 function renderHome(){
   const hr=new Date().getHours();
   const greet=hr<5?"Late night":hr<12?"Good morning":hr<18?"Good afternoon":"Good evening";
@@ -327,6 +362,7 @@ function renderHome(){
   const rows=DOMAINS.map(d=>{const c=domainStatus(d);return `<button class="dcard" onclick="go('d-${d.key}')"><div class="dctop"><span class="dcdot ${c}"></span><span class="dcname">${d.label}</span><span class="dcword ${c}">${domWord(c)}</span><span class="dcchev">&rsaquo;</span></div><div class="dcmetrics">${domMetrics(d.key)}</div></button>`;}).join("");
   return `<div class="hi">${greet}, <b>Noah</b>.</div>
     ${homeStats()}
+    <button class="bodybtn" onclick="go('bodyreport')">◆ Open full body readout</button>
     ${aiblock}${briefBtn}
     ${vitalsStrip()}
     ${insightChips()}
@@ -418,7 +454,8 @@ function inboxSection(){return `<div class="card"><div class="subhead">Inbox</di
 const SECTIONS={recovery:recoverySection,sleep:sleepSection,movement:movementSection,fuel:fuelSection,hydration:hydrationSection,mood:moodSection,focus:focusSection,reading:readingSection,school:schoolSection,work:workSection,create:createSection,care:careSection,money:moneySection,wins:winsSection,inbox:inboxSection};
 
 function domainView(key){const d=DOMAINS.find(x=>x.key===key);if(!d)return dhead("-")+`<div class="empty">Not found.</div>`;
-  return dhead(d.label)+`<button class="domcoach" onclick="coach('dom-${key}')">◈ Read my whole ${d.label.toLowerCase()}</button>${coachBox("dom-"+key)}`+d.subs.map(s=>SECTIONS[s]()).join("");
+  const bodyBtn=key==="body"?`<button class="bodybtn" onclick="go('bodyreport')">◆ Full body readout - every system</button>`:"";
+  return dhead(d.label)+bodyBtn+`<button class="domcoach" onclick="coach('dom-${key}')">◈ Read my whole ${d.label.toLowerCase()}</button>${coachBox("dom-"+key)}`+d.subs.map(s=>SECTIONS[s]()).join("");
 }
 function overseerView(){return dhead("Overseer")+`
   <div class="card"><div class="lbl">Ask it anything — it sees every system</div>
@@ -480,11 +517,11 @@ function speak(t){try{if(!('speechSynthesis'in window))return;speechSynthesis.ca
 function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert("Voice input isn't supported in this browser - type instead. (Spoken replies still work.)");return;}try{const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=1;r.onresult=e=>{const tx=e.results[0][0].transcript;const el=$('#ovm');if(el){el.value=tx;ask();}};r.onerror=()=>{};r.start();}catch(e){}}
 
 function go(key){view=key;const sc=$("#scroll");if(sc)sc.scrollTop=0;render();}
-function render(){const sc=$("#scroll");if(!sc)return;let html;if(view==="home")html=renderHome();else if(view==="overseer")html=overseerView();else if(view==="capture")html=captureView();else if(view==="review")html=reviewView();else if(view.indexOf("d-")===0)html=domainView(view.slice(2));else html=renderHome();sc.innerHTML=html;renderNav();}
+function render(){const sc=$("#scroll");if(!sc)return;let html;if(view==="home")html=renderHome();else if(view==="overseer")html=overseerView();else if(view==="capture")html=captureView();else if(view==="review")html=reviewView();else if(view==="bodyreport")html=bodyReportView();else if(view.indexOf("d-")===0)html=domainView(view.slice(2));else html=renderHome();sc.innerHTML=html;renderNav();}
 function renderNav(){const nav=$("#nav");const tabs=[["home","⌘","Today"],["capture","＋","Capture"],["overseer","◈","Overseer"]];nav.innerHTML=tabs.map(t=>{const k=t[0];const on=(view===k)||(k==='home'&&view!=='capture'&&view!=='overseer');return `<button class="${on?'on':''}" onclick="go('${k}')"><span class="ico">${t[1]}</span>${t[2]}</button>`;}).join("");}
 function tick(){const c=$("#clock");if(c)c.textContent=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});}
 async function loadLive(){
-  try{const r=await fetch("/api/health");const d=await r.json();if(d&&d.ok){LIVE.health=d.data||null;LIVE.history=d.history||[];LIVE.trends=d.trends||{};}}catch(e){}
+  try{const r=await fetch("/api/health");const d=await r.json();if(d&&d.ok){LIVE.health=d.data||null;LIVE.history=d.history||[];LIVE.trends=d.trends||{};LIVE.meta=d.meta||null;}}catch(e){}
   try{const r=await fetch("/api/canvas");const d=await r.json();if(d&&d.ok){if(Array.isArray(d.items))LIVE.canvas=d.items;if(Array.isArray(d.courses))LIVE.courses=d.courses;}}catch(e){}
   render();
 }
